@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources><string name="second.test">I am another regular String</string><string name="third.test_">Now with formatting Strings %1$ and integers %2d and floats %3f and rounding floats %4.2f</string><string name="test.this">I am a regular string</string></resources>

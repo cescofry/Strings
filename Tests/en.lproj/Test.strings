@@ -1,0 +1,17 @@
+/* 
+  Test.strings
+  Strings
+
+  Created by Francesco on 25/06/2013.
+  Copyright (c) 2013 ziofritz. All rights reserved.
+*/
+
+
+"test.this" = "I am a regular string";
+"second.test" = "I am another regular String";
+
+/*
+ This is a comment between test 2 and 3
+ */
+
+"third.test_" = "Now with formatting Strings %@ and integers %d and floats %f and rounding floats %.2f";

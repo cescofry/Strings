@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'HiperStrings' target in the 'HiperStrings' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
