@@ -8,17 +8,38 @@
 
 #import "ZFStringScanner.h"
 #import "ZFStringsConverter.h"
+#import "ZFLangFile.h"
+
+@interface ZFStringScanner ()
+
+@property (nonatomic, strong) NSURL *rootURL;
+@property (nonatomic, strong) NSURL *rootIOSURL;
+@property (nonatomic, strong) NSURL *rootAndroidURL;
+
+@end
 
 @implementation ZFStringScanner
+
+#pragma mark getters
+
+- (NSMutableArray *)files {
+    if (!_files) _files = [NSMutableArray array];
+    return _files;
+}
+
 
 - (NSFileManager *)fileManager {
     return [NSFileManager defaultManager];
 }
 
-- (void)scanStringsAtURL:(NSURL *)stringsURL {
+
+
+#pragma mark - conversions
+
+- (void)scanAtURL:(NSURL *)URL {
     
     NSError *error = nil;
-    NSArray *dirContents = [[self fileManager] contentsOfDirectoryAtURL:stringsURL includingPropertiesForKeys:nil options:0 error:&error];
+    NSArray *dirContents = [[self fileManager] contentsOfDirectoryAtURL:URL includingPropertiesForKeys:nil options:0 error:&error];
     
     if (error) NSLog(@"Error: %@", error.debugDescription);
     
@@ -29,24 +50,52 @@
         
         if (!exists) return;
         
-        if (!isDir) {
+        if (!isDir) {           
+    
+            ZFLangFile *file = [[ZFLangFile alloc] init];
+            BOOL valid = [file addFileAtURL:fileURL];
+            if (valid) [self.files addObject:file];
             
-            BOOL isStringsFile = [[fileURL pathExtension] isEqualToString:@"strings"];
-            if (!isStringsFile) return;
-            NSURL *XMLURL = [fileURL URLByAppendingPathExtension:@"xml"];
-            
-            ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
-            [converter convertStringsAtURL:fileURL toXMLAtURL:XMLURL];
         }
         else {
-            [self scanStringsAtURL:fileURL];
+            [self scanAtURL:fileURL];
         }
     }];
     
 }
 
-- (void)scanXMLsAtURL:(NSURL *)stringsURL {
+- (void)startScanAtURL:(NSURL *)URL {
+    [self scanAtURL:URL];
+    
+    NSMutableArray *groups = [NSMutableArray array];
+    [self.files enumerateObjectsUsingBlock:^(ZFLangFile *file, NSUInteger idx, BOOL *stop) {
+        __block BOOL inserted = NO;
+        [groups enumerateObjectsUsingBlock:^(NSMutableArray *group, NSUInteger idx, BOOL *stop) {
+            if ([file isEqual:[group objectAtIndex:0]]) {
+                [group addObject:file];
+                *stop = YES;
+                inserted = YES;
+            }
+        }];
+        if (!inserted) [groups addObject:[NSMutableArray arrayWithObject:file]];
+    }];
+    
+    
+    NSMutableArray *result = [NSMutableArray array];
+    [groups enumerateObjectsUsingBlock:^(NSMutableArray *group, NSUInteger idx, BOOL *stop) {
+        ZFLangFile *file = [group objectAtIndex:0];
+        [group enumerateObjectsUsingBlock:^(ZFLangFile *anotherFile, NSUInteger idx, BOOL *stop) {
+            if (idx == 0) return;
+            [file mergeWithFile:anotherFile];
+        }];
+        [result addObject:file];
+    }];
+    
+    self.files = result;
+    result = nil;
+    groups = nil;
     
 }
+
 
 @end

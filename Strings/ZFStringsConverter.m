@@ -48,6 +48,8 @@
     NSError *error;
     NSString *stringsString = [NSString stringWithContentsOfURL:stringsURL usedEncoding:&encoding error:&error];
     
+    if (!stringsString || stringsString.length == 0) return nil;
+    
     NSRegularExpression *regEx = [NSRegularExpression regularExpressionWithPattern:@"\"([a-zA-Z0-9._]*)\"[ ]*=[ ]*\"(.+?)\"[ ]*;" options:NSRegularExpressionAnchorsMatchLines error:&error];
     
     NSArray *matches = [regEx matchesInString:stringsString options:NSMatchingReportCompletion range:NSMakeRange(0, stringsString.length)];

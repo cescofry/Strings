@@ -10,7 +10,8 @@
 
 @interface ZFStringScanner : NSObject
 
-- (void)scanStringsAtURL:(NSURL *)stringsURL;
-- (void)scanXMLsAtURL:(NSURL *)stringsURL;
+@property (nonatomic, strong) NSMutableArray *files;
+
+- (void)startScanAtURL:(NSURL *)URL;
 
 @end

@@ -25,6 +25,8 @@ int main(int argc, const char * argv[])
         ZFStringScanner *scanner = [[ZFStringScanner alloc] init];
         [scanner scanStringsAtURL:[NSURL URLWithString:urlString]];
         
+        NSLog(@"Done, exiting");
+        
     }
     return 0;
 }
