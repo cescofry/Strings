@@ -33,6 +33,7 @@
 		1371BBC6177B2410008EB467 /* ZFFileViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBC5177B2410008EB467 /* ZFFileViewCell.m */; };
 		1371BBC9177B29D2008EB467 /* ZFFileDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBC8177B29D2008EB467 /* ZFFileDetailController.m */; };
 		1371BBCC177B2C1A008EB467 /* ZFTranslationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBCB177B2C1A008EB467 /* ZFTranslationView.m */; };
+		1371BBD5177B5954008EB467 /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 1371BBD4177B5954008EB467 /* icon.iconset */; };
 		13B17AED177AFB6000C0473E /* ZFLangFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFLangFile.m */; };
 		13B17AEE177AFE2800C0473E /* ZFLangFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFLangFile.m */; };
 		13B17AEF177AFE2800C0473E /* ZFLangFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFLangFile.m */; };
@@ -97,6 +98,7 @@
 		1371BBC8177B29D2008EB467 /* ZFFileDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFFileDetailController.m; path = Controllers/ZFFileDetailController.m; sourceTree = "<group>"; };
 		1371BBCA177B2C1A008EB467 /* ZFTranslationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZFTranslationView.h; path = Views/ZFTranslationView.h; sourceTree = "<group>"; };
 		1371BBCB177B2C1A008EB467 /* ZFTranslationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFTranslationView.m; path = Views/ZFTranslationView.m; sourceTree = "<group>"; };
+		1371BBD4177B5954008EB467 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; name = icon.iconset; path = _etc/icon.iconset; sourceTree = SOURCE_ROOT; };
 		13B17AEB177AFB6000C0473E /* ZFLangFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFLangFile.h; sourceTree = "<group>"; };
 		13B17AEC177AFB6000C0473E /* ZFLangFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFLangFile.m; sourceTree = "<group>"; };
 		13B17AF0177B02F700C0473E /* ZFUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFUtils.h; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 		134E98F61779A73900D7D54B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1371BBD4177B5954008EB467 /* icon.iconset */,
 				134E98F71779A73900D7D54B /* HiperStrings-Info.plist */,
 				134E98F81779A73900D7D54B /* InfoPlist.strings */,
 				134E98FB1779A73900D7D54B /* main.m */,
@@ -371,6 +374,7 @@
 				134E98FA1779A73900D7D54B /* InfoPlist.strings in Resources */,
 				134E99001779A73900D7D54B /* Credits.rtf in Resources */,
 				134E99061779A73900D7D54B /* MainMenu.xib in Resources */,
+				1371BBD5177B5954008EB467 /* icon.iconset in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

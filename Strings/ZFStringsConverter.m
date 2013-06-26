@@ -58,7 +58,7 @@
         NSString *key = [stringsString substringWithRange:[match rangeAtIndex:1]];
         NSString *value = [stringsString substringWithRange:[match rangeAtIndex:2]];
         
-        [translation setObject:[self convertFormatForString:value isIOS:YES] forKey:key];
+        [translation setObject:value forKey:key];
     }];
     
     return (NSDictionary *)translation;
@@ -70,7 +70,7 @@
     NSMutableString *stringsString = [NSMutableString string];
     
     [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
-        [stringsString appendFormat:@"\"%@\" = \"%@\";\n", key, obj];
+        [stringsString appendFormat:@"\"%@\" = \"%@\";\n", key, [self convertFormatForString:obj isIOS:YES]];
     }];
     
     return (NSString *)stringsString;
@@ -83,9 +83,13 @@
     NSMutableDictionary *translation = [NSMutableDictionary dictionary];
     NSError *error = nil;
     NSXMLDocument *xml = [[NSXMLDocument alloc] initWithContentsOfURL:XMLURL options:NSDataReadingMappedIfSafe error:&error];
-    NSArray *nodes = [xml nodesForXPath:@"resources" error:&error];
+    NSArray *nodes = [xml nodesForXPath:@"//resources/string" error:&error];
     [nodes enumerateObjectsUsingBlock:^(NSXMLNode *obj, NSUInteger idx, BOOL *stop) {
-        [translation setObject:[self convertFormatForString:obj.stringValue isIOS:NO] forKey:obj.name];
+        NSError *error = nil;
+        NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:[obj XMLString] error:&error];
+        NSString *key = [element attributeForName:@"name"].stringValue;
+
+        [translation setObject:obj.stringValue forKey:key];
     }];
     
     return (NSDictionary *)translation;
@@ -97,7 +101,7 @@
     [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
         NSXMLElement *element = [NSXMLElement elementWithName:@"string"];
         [element setAttributesAsDictionary:@{@"name" : key}];
-        [element setStringValue:obj];
+        [element setStringValue:[self convertFormatForString:obj isIOS:NO]];
         
         [elements addObject:element];
     }];

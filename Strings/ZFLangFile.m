@@ -10,7 +10,8 @@
 #import "ZFStringsConverter.h"
 #import "ZFUtils.h"
 
-#define FAV_LANG    @"en"
+#define FAV_LANG            @"en"
+#define KEY_COMAPARISON      5
 
 @interface ZFLangFile ()
 
@@ -33,11 +34,15 @@
 - (NSArray *)hashKeys {
     if (!_hashKeys) {
         
-        NSDictionary *source = (self.iOStranslations.count > 0)? self.iOStranslations : self.androidTranslations;
-        NSString *key = ([[source allKeys] containsObject:@"en"])? @"en" : [[source allKeys] lastObject];
+        _hashKeys = [self allKeys];
+        if (!_hashKeys || _hashKeys.count < KEY_COMAPARISON) {
+            NSDictionary *source = (self.iOStranslations.count > 0)? self.iOStranslations : self.androidTranslations;
+            NSString *key = ([[source allKeys] containsObject:@"en"])? @"en" : [[source allKeys] lastObject];
+            
+            NSArray *keys = [[[source objectForKey:key] allKeys] sortedArrayUsingSelector:@selector(compare:)];
+            _hashKeys = [keys subarrayWithRange:NSMakeRange(0, MIN(KEY_COMAPARISON, keys.count))];
+        }
         
-        NSArray *keys = [[[source objectForKey:key] allKeys] sortedArrayUsingSelector:@selector(compare:)];
-        _hashKeys = [keys subarrayWithRange:NSMakeRange(0, MIN(5, keys.count))];
     }
     return _hashKeys;
 }
@@ -48,10 +53,10 @@
     __block int count = 0;
     [self.hashKeys enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
         if ([[(ZFLangFile *)object hashKeys] containsObject:obj]) count++;
-        *stop = (count >= 3);
+        *stop = (count >= KEY_COMAPARISON);
     }];
     
-    return (count >= 3);
+    return (count >= MIN(KEY_COMAPARISON, self.hashKeys.count));
 }
 
 
