@@ -16,7 +16,11 @@
 @property (nonatomic, strong) NSMutableDictionary *iOStranslations;
 @property (nonatomic, strong) NSMutableDictionary *androidTranslations;
 
+@property (nonatomic, strong) NSArray *allKeys;
+@property (nonatomic, strong) NSArray *allLanguages;
+
 - (BOOL)addFileAtURL:(NSURL *) url;
 - (BOOL)mergeWithFile:(ZFLangFile *)file;
+- (void)finalizeMerge;
 
 @end

@@ -10,6 +10,8 @@
 #import "ZFStringsConverter.h"
 #import "ZFUtils.h"
 
+#define FAV_LANG    @"en"
+
 @interface ZFLangFile ()
 
 @property (nonatomic, strong) NSArray *hashKeys;
@@ -57,6 +59,7 @@
     BOOL isIOS;
     NSString *lang = [[ZFUtils sharedUtils] langFromURL:url isIOS:&isIOS];
     if (!lang) return NO;
+    
     BOOL alreadyExists = (isIOS)? ([self.iOStranslations objectForKey:lang] != nil) : ([self.androidTranslations objectForKey:lang] != nil);
     if (alreadyExists) return NO;
     
@@ -72,6 +75,9 @@
     else {
         [self.androidTranslations setObject:translations forKey:lang];
     }
+    
+    self.allKeys = nil;
+    self.allLanguages = nil;
     
     return YES;
 }
@@ -95,7 +101,50 @@
         mergeAndroid = YES;
     }];
     
-    return (mergeIOS || mergeAndroid);
+    BOOL didMerge = (mergeIOS || mergeAndroid);
+    if (didMerge) {
+        self.allKeys = nil;
+        self.allLanguages = nil;
+    }
+    return didMerge;
+}
+
+- (void)fillGaps {
+    NSMutableArray *allKeys = [NSMutableArray array];
+    NSMutableArray *allLanguages = [NSMutableArray array];
+    
+    [self.iOStranslations enumerateKeysAndObjectsUsingBlock:^(NSString *lang, NSDictionary *translation, BOOL *stop) {
+        if (![allLanguages containsObject:lang]) [allLanguages addObject:lang];
+        [translation.allKeys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
+            if ([allKeys containsObject:key]) return;
+            [allKeys addObject:key];
+        }];
+    }];
+    
+    [self.androidTranslations enumerateKeysAndObjectsUsingBlock:^(NSString *lang, NSDictionary *translation, BOOL *stop) {
+        if (![allLanguages containsObject:lang]) [allLanguages addObject:lang];
+        [translation.allKeys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
+            if ([allKeys containsObject:key]) return;
+            [allKeys addObject:key];
+        }];
+    }];
+    
+    _allKeys = [allKeys sortedArrayUsingSelector:@selector(compare:)];
+    _allLanguages = [allLanguages sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+        if ([obj1 isEqualToString:FAV_LANG]) return NSOrderedAscending;
+        else if ([obj2 isEqualToString:FAV_LANG]) return NSOrderedDescending;
+        else return [obj1 compare:obj2];
+    }];
+}
+
+- (NSArray *)allKeys {
+    if (!_allKeys) [self fillGaps];
+    return _allKeys;
+}
+
+- (NSArray *)allLanguages {
+    if (!_allLanguages) [self fillGaps];
+    return _allLanguages;
 }
 
 @end
