@@ -17,6 +17,7 @@
 
 @implementation ZFUtils
 
+#pragma mark Getters
 
 - (NSRegularExpression *)iOSLangRegEx {
     if (!_iOSLangRegEx) {
@@ -33,6 +34,18 @@
     }
     return _androidLangRegEx;
 }
+
+#pragma mark - Lang utils
+
+/*!
+ @abstract
+ Checks the URL path for the language identifier and recognise if it's and iOS or Andorid path
+ 
+ @param url, the url to be checked
+ @param iuIOS, reference to the boolean that will be changed accordingly
+ @return NSSTring with the language identifier. Ex: en, it, de, fr, es ...
+ 
+ */
 
 
 - (NSString *)langFromURL:(NSURL *)url isIOS:(BOOL *)isIOS {
@@ -52,7 +65,7 @@
     return lang;
 }
 
-#pragma mark singleton
+#pragma mark - singleton
 
 static ZFUtils *_sharedUtils;
 

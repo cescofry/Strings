@@ -36,6 +36,14 @@
 
 #pragma mark - conversions
 
+/*!
+ @abstract
+ Scan the url for translations files for both iOS and Android
+ 
+ @param url of the resource
+ 
+ */
+
 - (void)scanAtURL:(NSURL *)URL {
     
     NSError *error = nil;
@@ -63,6 +71,16 @@
     }];
     
 }
+
+/*!
+ @abstract
+ Entry point for scanning recursively starting from a given URL
+ 
+ @param url, root of the scan to perform
+ 
+ @discussion After the directory scan is complete, all the generated files get merged by languages and resource type (iOS/Android)
+ 
+ */
 
 - (void)startScanAtURL:(NSURL *)URL {
     [self scanAtURL:URL];

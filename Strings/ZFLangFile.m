@@ -31,6 +31,17 @@
     return self;
 }
 
+
+/*!
+ @abstract
+ Generate a list of minimum 5 keys to be used for comparison
+ 
+ @return NSArray of keys
+ 
+ @discussion The method will first look at allKeys, then if missing or too small, will try to get them from either iOStranslation or androidTRanslations.
+ 
+ */
+
 - (NSArray *)hashKeys {
     if (!_hashKeys) {
         
@@ -60,6 +71,18 @@
 }
 
 
+/*!
+ @abstract
+ Preferred method to convert a file at URL to ZFLangFile
+ 
+ @param url of the file in the disk
+ 
+ @return YES if the operation of adding result succesfull No otherwise
+ 
+ @discussion This method covnert the url in a dictioanry of keys and transaltions to be addedd to the translations for the relative language identifier
+ 
+ */
+
 - (BOOL)addFileAtURL:(NSURL *)url {
     BOOL isIOS;
     NSString *lang = [[ZFUtils sharedUtils] langFromURL:url isIOS:&isIOS];
@@ -87,6 +110,18 @@
     return YES;
 }
 
+/*!
+ @abstract
+ Tries to merge a given file if and only if the there is amtch between the keys
+ 
+ @param file, the fiel to be merged
+ 
+ @return YES if the file have been merged, NO otherwise
+ 
+ @discussion The act of cross reference the keys and then merging the languages and the translations is expensive. Maybe need refactoring
+ 
+ */
+
 - (BOOL)mergeWithFile:(ZFLangFile *)file {
     if (![self isEqual:file]) return NO;
     
@@ -113,6 +148,14 @@
     }
     return didMerge;
 }
+
+/*!
+ @abstract
+ Fill the blanks in languages and translation keys
+ 
+ @discussion Used to generate the getters for allKeys and allLanguages. Those two get constantly nilled by addFileAtURL and mergeWithFile, so they may become source of problems (dead loops in primis)
+ 
+ */
 
 - (void)fillGaps {
     NSMutableArray *allKeys = [NSMutableArray array];

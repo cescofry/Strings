@@ -12,6 +12,20 @@
 
 #pragma mark - Strings
 
+/*!
+ @abstract
+ Convert a string substituting the format value from and to iOS/Andorid
+ 
+ @param input string to be converted
+ 
+ @param isIOS boolean for the conversion direction
+ 
+ @return NSSTring, the converted string
+ 
+ @discussion The converter takes care of different string rapresentation and enumeration of arguaments on Andorid
+ 
+ */
+
 - (NSString *)convertFormatForString:(NSString *)input isIOS:(BOOL)isIOS {
     static NSRegularExpression *formatIOSRegEx;
     static NSRegularExpression *formatAndroidRegEx;
@@ -37,6 +51,18 @@
     
     return (NSString *)mutValue;
 }
+
+/*!
+ @abstract
+ Convert the .strings file at a given URL and converts it to a dictionary of transaltions
+ 
+ @param stringsURL the url of the file to be converted
+ 
+ @return NSDictionary with the translations
+ 
+ @discussion The comments are not recorded so they are lost in this fase already. The same is true for the key sorting which is likely to become alphabetical in the process
+ 
+ */
 
 - (NSDictionary *)translationsForStringsAtURL:(NSURL *)stringsURL {
     
@@ -65,6 +91,16 @@
     
 }
 
+/*!
+ @abstract
+ Parse the dictionary of translations to a string ready to be written to a .strings file
+ 
+ @param dictionary of translations
+ 
+ @return NSString ready in .strings format
+ 
+ */
+
 - (NSString *)stringsStringFromDictionary:(NSDictionary *)dictionary {
     
     NSMutableString *stringsString = [NSMutableString string];
@@ -78,6 +114,18 @@
 }
 
 #pragma mark - XML
+
+/*!
+ @abstract
+ Converts the .xml file at URL to a dictionary of translations
+ 
+ @param MLXURL of the file to be converted
+ 
+ @return NSDictionary with the translations
+ 
+ @discussion This doesn't take care of the format parameter found in some xml translation files
+ 
+ */
 
 - (NSDictionary *)translationsForXMLAtURL:(NSURL *)XMLURL {
     NSMutableDictionary *translation = [NSMutableDictionary dictionary];
@@ -94,6 +142,18 @@
     
     return (NSDictionary *)translation;
 }
+
+/*!
+ @abstract
+ Parse the dictionary of transaltions to a string ready to be written on an .xml file
+ 
+ @param dictionary with the transaltions
+ 
+ @return NSString ready to be written to an .xml file
+ 
+ @discussion The format attribute is not parsed as not tracked
+ 
+ */
 
 - (NSString *)xmlStringFromDictionary:(NSDictionary *)dictionary {
     
@@ -116,7 +176,7 @@
 
 #pragma mark - Converters
 
-- (void)convertStringsAtURL:(NSURL *)stringsURL toXMLAtURL:(NSURL *)XMLURL {
+- (void)convertStringsAtURL:(NSURL *)stringsURL toXMLAtURL:(NSURL *)XMLURL __deprecated{
     NSDictionary *translations = [self translationsForStringsAtURL:stringsURL];
     NSString *translationsString = [self xmlStringFromDictionary:translations];
     
@@ -125,7 +185,7 @@
 }
 
 
-- (void)convertXMLAtURL:(NSURL *)XMLURL toStringsAtURL:(NSURL *)stringsURL {
+- (void)convertXMLAtURL:(NSURL *)XMLURL toStringsAtURL:(NSURL *)stringsURL  __deprecated{
     NSDictionary *translations = [self translationsForXMLAtURL:XMLURL];
     NSString *translationsString = [self stringsStringFromDictionary:translations];
     

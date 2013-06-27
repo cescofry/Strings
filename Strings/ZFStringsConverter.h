@@ -10,8 +10,8 @@
 
 @interface ZFStringsConverter : NSObject
 
-- (void)convertStringsAtURL:(NSURL *)stringsURL toXMLAtURL:(NSURL *)XMLURL;
-- (void)convertXMLAtURL:(NSURL *)XMLURL toStringsAtURL:(NSURL *)stringsURL;
+- (void)convertStringsAtURL:(NSURL *)stringsURL toXMLAtURL:(NSURL *)XMLURL  __deprecated;
+- (void)convertXMLAtURL:(NSURL *)XMLURL toStringsAtURL:(NSURL *)stringsURL  __deprecated;
 
 
 - (NSDictionary *)translationsForXMLAtURL:(NSURL *)XMLURL;
