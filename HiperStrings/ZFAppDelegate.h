@@ -3,7 +3,9 @@
 //  HiperStrings
 //
 //  Created by Francesco on 25/06/2013.
-//  Copyright (c) 2013 ziofritz. All rights reserved.
+//
+//  Open Source Initiative OSI - The MIT License (MIT):Licensing [OSI Approved License] The MIT License (MIT)
+//  Copyright (c) 2013 ziofritz.
 //
 
 #import <Cocoa/Cocoa.h>

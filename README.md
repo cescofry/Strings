@@ -28,3 +28,13 @@ Tests are a bit behind
 ### Aknolegment
 My background comes from iOS developemnt. In that sense I feel pretty confident with the import/export and translation of the files. However this project could really use some help from some more experienced Mac OS X developers to address the user interface, as well as some Android developers ot check the format conversion and the parsing of xml files.<br>
 At this stage the basic for file conversion is at a good stage. Most important features to be implemented are the keeping the order of the keys during parsing comapred with original files, and consequently tracking and parsing of the comments inside the files (at the moment both ignored). Also the Andorid xml string elements sometimes contain a format attribute that is ignored from the covnertion and later on the parsing as well.<br>
+
+
+### License
+Open Source Initiative OSI - The MIT License (MIT):Licensing [OSI Approved License] The MIT License (MIT)<br>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:<br>
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br>
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.<br>

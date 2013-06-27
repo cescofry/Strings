@@ -58,7 +58,7 @@
 /* Begin PBXFileReference section */
 		134E98D217799C4400D7D54B /* Strings */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Strings; sourceTree = BUILT_PRODUCTS_DIR; };
 		134E98D517799C4400D7D54B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		134E98D817799C4400D7D54B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		134E98D817799C4400D7D54B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		134E98DB17799C4400D7D54B /* Strings-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Strings-Prefix.pch"; sourceTree = "<group>"; };
 		134E98DC17799C4400D7D54B /* Strings.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Strings.1; sourceTree = "<group>"; };
 		134E98E717799DC900D7D54B /* ZFStringsConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFStringsConverter.m; sourceTree = "<group>"; };
@@ -70,11 +70,11 @@
 		134E98F41779A73900D7D54B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		134E98F71779A73900D7D54B /* HiperStrings-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HiperStrings-Info.plist"; sourceTree = "<group>"; };
 		134E98F91779A73900D7D54B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		134E98FB1779A73900D7D54B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		134E98FB1779A73900D7D54B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		134E98FD1779A73900D7D54B /* HiperStrings-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HiperStrings-Prefix.pch"; sourceTree = "<group>"; };
 		134E98FF1779A73900D7D54B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		134E99011779A73900D7D54B /* ZFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFAppDelegate.h; sourceTree = "<group>"; };
-		134E99021779A73900D7D54B /* ZFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFAppDelegate.m; sourceTree = "<group>"; };
+		134E99011779A73900D7D54B /* ZFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ZFAppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		134E99021779A73900D7D54B /* ZFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ZFAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		134E99051779A73900D7D54B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		134E990A1779A80700D7D54B /* ZFStringScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFStringScanner.h; sourceTree = "<group>"; };
 		134E990B1779A80700D7D54B /* ZFStringScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFStringScanner.m; sourceTree = "<group>"; };
@@ -82,8 +82,8 @@
 		134E99171779E11C00D7D54B /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		134E991C1779E11C00D7D54B /* StringsTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "StringsTests-Info.plist"; sourceTree = "<group>"; };
 		134E991E1779E11C00D7D54B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		134E99201779E11C00D7D54B /* StringsTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringsTests.h; sourceTree = "<group>"; };
-		134E99211779E11C00D7D54B /* StringsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StringsTests.m; sourceTree = "<group>"; };
+		134E99201779E11C00D7D54B /* StringsTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = StringsTests.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		134E99211779E11C00D7D54B /* StringsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = StringsTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		134E99231779E11C00D7D54B /* StringsTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StringsTests-Prefix.pch"; sourceTree = "<group>"; };
 		134E99291779E16500D7D54B /* ZFStringConverterTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFStringConverterTests.h; sourceTree = "<group>"; };
 		134E992A1779E16500D7D54B /* ZFStringConverterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFStringConverterTests.m; sourceTree = "<group>"; };
@@ -94,8 +94,8 @@
 		1371BBC0177B23A5008EB467 /* ZFFilesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFFilesController.m; path = Controllers/ZFFilesController.m; sourceTree = "<group>"; };
 		1371BBC4177B2410008EB467 /* ZFFileViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZFFileViewCell.h; path = Views/ZFFileViewCell.h; sourceTree = "<group>"; };
 		1371BBC5177B2410008EB467 /* ZFFileViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFFileViewCell.m; path = Views/ZFFileViewCell.m; sourceTree = "<group>"; };
-		1371BBC7177B29D2008EB467 /* ZFFileDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZFFileDetailController.h; path = Controllers/ZFFileDetailController.h; sourceTree = "<group>"; };
-		1371BBC8177B29D2008EB467 /* ZFFileDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFFileDetailController.m; path = Controllers/ZFFileDetailController.m; sourceTree = "<group>"; };
+		1371BBC7177B29D2008EB467 /* ZFFileDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ZFFileDetailController.h; path = Controllers/ZFFileDetailController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1371BBC8177B29D2008EB467 /* ZFFileDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ZFFileDetailController.m; path = Controllers/ZFFileDetailController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1371BBCA177B2C1A008EB467 /* ZFTranslationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZFTranslationView.h; path = Views/ZFTranslationView.h; sourceTree = "<group>"; };
 		1371BBCB177B2C1A008EB467 /* ZFTranslationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFTranslationView.m; path = Views/ZFTranslationView.m; sourceTree = "<group>"; };
 		1371BBD4177B5954008EB467 /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; name = icon.iconset; path = _etc/icon.iconset; sourceTree = SOURCE_ROOT; };
