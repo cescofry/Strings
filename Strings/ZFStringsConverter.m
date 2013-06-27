@@ -115,6 +115,8 @@
     
 }
 
+
+
 #pragma mark - XML
 
 /*!
@@ -124,8 +126,6 @@
  @param MLXURL of the file to be converted
  
  @return NSDictionary with the translations
- 
- @discussion This doesn't take care of the format parameter found in some xml translation files
  
  */
 
@@ -153,7 +153,7 @@
  
  @return NSString ready to be written to an .xml file
  
- @discussion The format attribute is not parsed as not tracked
+ @discussion The format attribute is not parsed
  
  */
 

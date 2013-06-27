@@ -1,7 +1,7 @@
 ###Strings
 =======
 
-Strings is an utility to transform and manage the diffrent localization files from and to an iOS project and an Android project.<br>
+Strings is an utility to transform and manage the diffrent localisation files from and to an iOS project and an Android project.<br>
 The obejctive-C project has 2 targets. They are meant for managing strings through an GUI interface as well as a command line one.<br>
 
 The core library at the moment is 
@@ -27,7 +27,7 @@ Tests are a bit behind
 
 ### Aknolegment
 My background comes from iOS developemnt. In that sense I feel pretty confident with the import/export and translation of the files. However this project could really use some help from some more experienced Mac OS X developers to address the user interface, as well as some Android developers ot check the format conversion and the parsing of xml files.<br>
-At this stage the basic for file conversion is at a good stage. Most important features to be implemented are the keeping the order of the keys during parsing comapred with original files, and consequently tracking and parsing of the comments inside the files (at the moment both ignored). Also the Andorid xml string elements sometimes contain a format attribute that is ignored from the covnertion and later on the parsing as well.<br>
+At this stage the basic for file conversion is at a good stage. Most important features to be implemented are the keeping the order of the keys during parsing comapred with original files, and consequently tracking and parsing of the comments inside the files (at the moment both ignored).<br>
 
 
 ### License
