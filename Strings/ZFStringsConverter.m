@@ -9,6 +9,7 @@
 //
 
 #import "ZFStringsConverter.h"
+#import "Config.h"
 
 @implementation ZFStringsConverter
 
@@ -33,8 +34,8 @@
     static NSRegularExpression *formatAndroidRegEx;
     if (!formatIOSRegEx) {
         NSError *error;
-        formatIOSRegEx = [NSRegularExpression regularExpressionWithPattern:@"%(.?\\d?[@a-z])" options:NSRegularExpressionAnchorsMatchLines error:&error];
-        formatAndroidRegEx = [NSRegularExpression regularExpressionWithPattern:@"%(\\d.?\\d?[$a-z])" options:NSRegularExpressionAnchorsMatchLines error:&error];
+        formatIOSRegEx = [NSRegularExpression regularExpressionWithPattern:ZF_FORMAT_IOS_REGEX options:NSRegularExpressionAnchorsMatchLines error:&error];
+        formatAndroidRegEx = [NSRegularExpression regularExpressionWithPattern:ZF_FORMAT_ANDROID_REGEX options:NSRegularExpressionAnchorsMatchLines error:&error];
     }
     
     __block NSMutableString *mutValue = [NSMutableString stringWithString:input];
@@ -78,7 +79,7 @@
     
     if (!stringsString || stringsString.length == 0) return nil;
     
-    NSRegularExpression *regEx = [NSRegularExpression regularExpressionWithPattern:@"\"([a-zA-Z0-9._]*)\"[ ]*=[ ]*\"(.+?)\"[ ]*;" options:NSRegularExpressionAnchorsMatchLines error:&error];
+    NSRegularExpression *regEx = [NSRegularExpression regularExpressionWithPattern:ZF_IOS_REGEX options:NSRegularExpressionAnchorsMatchLines error:&error];
     
     NSArray *matches = [regEx matchesInString:stringsString options:NSMatchingReportCompletion range:NSMakeRange(0, stringsString.length)];
     [matches enumerateObjectsUsingBlock:^(NSTextCheckingResult *match, NSUInteger idx, BOOL *stop) {

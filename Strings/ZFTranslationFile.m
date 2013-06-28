@@ -12,6 +12,7 @@
 #import "ZFLangFile.h"
 #import "ZFStringsConverter.h"
 #import "ZFUtils.h"
+#import "Config.h"
 
 #define FAV_LANG            @"en"
 #define KEY_COMAPARISON      5
@@ -86,8 +87,24 @@
 
 - (void)checkUpNameForLang:(ZFLangFile *)langFile {
     if (!langFile) return;
-    if ((langFile.type == ZFLangTypeIOS) && !self.iOSName) self.iOSName = langFile.fileName;
-    if ((langFile.type == ZFLangTypeAndorid) && !self.androidName) self.androidName = langFile.fileName;
+    
+    switch (langFile.type) {
+        case ZFLangTypeIOS:
+            if (!self.iOSName) {
+                self.iOSName = langFile.fileName;
+                _rootIOSURL = [[langFile.url URLByDeletingLastPathComponent] URLByDeletingLastPathComponent];
+            }
+            break;
+        case ZFLangTypeAndorid:
+            if (!self.androidName) {
+                self.androidName = langFile.fileName;
+                _rootAndroidURL = [[langFile.url URLByDeletingLastPathComponent] URLByDeletingLastPathComponent];
+            }
+            break;
+        default:
+            break;
+    }
+
 }
 
 
@@ -170,7 +187,8 @@
         
     }];
     
-    self.conversionDriver = (iOSLangCount >= androidLangCount)? ZFTranslationFileConversionDriverIOS : ZFTranslationFileConversionDriverAndorid;
+    if (iOSLangCount == 0 || androidLangCount == 0) self.conversionDriver = ZFTranslationFileConversionDriverSkip;
+    else self.conversionDriver = (iOSLangCount >= androidLangCount)? ZFTranslationFileConversionDriverIOS : ZFTranslationFileConversionDriverAndorid;
     
     _allKeys = [allKeys sortedArrayUsingSelector:@selector(compare:)];
     _allLanguages = [allLanguages sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
@@ -193,6 +211,24 @@
 
 #pragma mark - writing 
 
+- (void)convertURLForLanguage:(ZFLangFile *)langFile fromLangFile:(ZFLangFile *)referenceLangFile {
+    if (langFile.url) return;
+    
+    if (referenceLangFile.type == ZFLangTypeIOS) {
+        NSString *dir = [NSString stringWithFormat:ZF_LANG_DIR_ANDROID_, referenceLangFile.language];
+        NSString *name = [referenceLangFile.fileName stringByAppendingPathExtension:ZF_LANG_EXTENSION_ANDROID_];
+        langFile.url = [[self.rootAndroidURL URLByAppendingPathComponent:dir] URLByAppendingPathComponent:name];
+    }
+    else {
+        NSString *dir = [NSString stringWithFormat:ZF_LANG_DIR_IOS_, referenceLangFile.language];
+        NSString *name = [referenceLangFile.fileName stringByAppendingPathExtension:ZF_LANG_EXTENSION_IOS_];
+        langFile.url = [[self.rootIOSURL URLByAppendingPathComponent:dir] URLByAppendingPathComponent:name];
+    }
+    
+    NSError *error = nil;
+    [[NSFileManager defaultManager] createDirectoryAtURL:[langFile.url URLByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&error];
+}
+
 - (BOOL)writeAllTranslations {
     
     if (self.conversionDriver == ZFTranslationFileConversionDriverSkip) return NO;
@@ -201,27 +237,24 @@
 
     NSMutableDictionary *couplingLanguages = [NSMutableDictionary dictionary];
     [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
-        NSMutableArray *files = [couplingLanguages objectForKey:obj.language];
-        if (!files) files = [NSMutableArray array];
-        [files addObject:obj];
+        NSMutableDictionary *files = [couplingLanguages objectForKey:obj.language];
+        if (!files) files = [NSMutableDictionary dictionary];
+        [files setObject:obj forKey:[NSNumber numberWithInt:obj.type]];
         [couplingLanguages setObject:files forKey:obj.language];
     }];
     
     __block BOOL succeded = YES;
-    [couplingLanguages enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSArray *obj, BOOL *stop) {
-        if (obj.count < 2) {
-            succeded = NO;
-            return;
-        }
+    [couplingLanguages enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *files, BOOL *stop) {
+        ZFLangFile *objIOS = [files objectForKey:[NSNumber numberWithInt:ZFLangTypeIOS]];
+        ZFLangFile *objAndorid = [files objectForKey:[NSNumber numberWithInt:ZFLangTypeAndorid]];
         
-        ZFLangFile *objIOS = [obj objectAtIndex:0];
-        ZFLangFile *objAndorid;
-        if (objIOS.type == ZFLangTypeAndorid) {
-            objAndorid = objIOS;
-            objIOS = [obj objectAtIndex:1];
+        if (!objIOS && objAndorid) {
+            objIOS = [[ZFLangFile alloc] init];
+            [self convertURLForLanguage:objIOS fromLangFile:objAndorid];
         }
-        else {
-            objAndorid = [obj objectAtIndex:1];
+        if (!objAndorid && objIOS) {
+            objAndorid = [[ZFLangFile alloc] init];
+            [self convertURLForLanguage:objAndorid fromLangFile:objIOS];
         }
 
         NSError *error = nil;

@@ -15,7 +15,7 @@ typedef enum {
 
 @interface ZFLangFile : NSObject
 
-@property (nonatomic, strong, readonly) NSURL *url;
+@property (nonatomic, strong) NSURL *url;
 @property (nonatomic, strong, readonly) NSString *fileName;
 @property (nonatomic, assign, readonly) ZFLangType type;
 @property (nonatomic, strong, readonly) NSString *language;

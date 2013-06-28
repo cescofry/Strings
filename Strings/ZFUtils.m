@@ -9,6 +9,7 @@
 //
 
 #import "ZFUtils.h"
+#import "Config.h"
 
 @interface ZFUtils ()
 
@@ -24,7 +25,7 @@
 - (NSRegularExpression *)iOSLangRegEx {
     if (!_iOSLangRegEx) {
         NSError *error = nil;
-        _iOSLangRegEx = [[NSRegularExpression alloc] initWithPattern:@"/([a-z]{2}).lproj/" options:0 error:&error];
+        _iOSLangRegEx = [[NSRegularExpression alloc] initWithPattern:ZF_LANG_DIR_IOS_REGEX options:0 error:&error];
     }
     return _iOSLangRegEx;
 }
@@ -32,7 +33,7 @@
 - (NSRegularExpression *)androidLangRegEx {
     if (!_androidLangRegEx) {
         NSError *error = nil;
-        _androidLangRegEx = [[NSRegularExpression alloc] initWithPattern:@"/values-([a-z]{2})/" options:0 error:&error];
+        _androidLangRegEx = [[NSRegularExpression alloc] initWithPattern:ZF_LANG_DIR_ANDROID_REGEX options:0 error:&error];
     }
     return _androidLangRegEx;
 }

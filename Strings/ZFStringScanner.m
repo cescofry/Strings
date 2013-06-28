@@ -22,6 +22,8 @@
 
 @implementation ZFStringScanner
 
+@synthesize files = _files;
+
 #pragma mark getters
 
 - (NSMutableArray *)files {
@@ -64,7 +66,9 @@
     
             ZFTranslationFile *file = [[ZFTranslationFile alloc] init];
             BOOL valid = [file addFileAtURL:fileURL];
-            if (valid) [self.files addObject:file];
+            if (valid) {
+                [self.files addObject:file];
+            }
             
         }
         else {
@@ -111,7 +115,7 @@
         [result addObject:file];
     }];
     
-    self.files = result;
+    _files = result;
     result = nil;
     groups = nil;
     

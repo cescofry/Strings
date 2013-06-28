@@ -29,6 +29,9 @@ typedef enum {
 @property (nonatomic, strong) NSArray *allKeys;
 @property (nonatomic, strong) NSArray *allLanguages;
 
+@property (nonatomic, strong, readonly) NSURL *rootIOSURL;
+@property (nonatomic, strong, readonly) NSURL *rootAndroidURL;
+
 - (BOOL)addFileAtURL:(NSURL *) url;
 - (BOOL)mergeWithFile:(ZFTranslationFile *)file;
 - (void)finalizeMerge;

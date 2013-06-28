@@ -12,7 +12,7 @@
 
 @interface ZFStringScanner : NSObject
 
-@property (nonatomic, strong) NSMutableArray *files;
+@property (nonatomic, strong, readonly) NSMutableArray *files;
 
 - (void)startScanAtURL:(NSURL *)URL;
 
