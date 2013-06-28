@@ -9,7 +9,6 @@
 #import "ZFExportFilesController.h"
 #import "ZFTranslationFile.h"
 #import "ZFFileExportCell.h"
-#import "ZFStringsConverter.h"
 
 @implementation ZFExportFilesController
 
@@ -22,13 +21,15 @@
 
 - (IBAction)exportAction:(id)sender {
     
-    ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
-    [self.scanner.files enumerateObjectsUsingBlock:^(ZFTranslationFile *langFile, NSUInteger idx, BOOL *stop) {
-        
+    __block BOOL succeded = YES;
+    [self.scanner.files enumerateObjectsUsingBlock:^(ZFTranslationFile *translationFile, NSUInteger idx, BOOL *stop) {
+        BOOL done = [translationFile writeAllTranslations];
+        if (succeded && !done) succeded = NO;
     }];
     
-    
-    
+    NSString *message = (succeded)? @"Export succeded" : @"Export Failed";
+    NSAlert *alert = [NSAlert alertWithMessageText:@"Export" defaultButton:@"Close" alternateButton:nil otherButton:nil informativeTextWithFormat:message];
+    [alert runModal];
     
     [self.window close];
 }

@@ -8,9 +8,9 @@
 
 #import "ZFFileExportCell.h"
 
-#define I_TO_DROID  @"i >> A"
-#define DROID_TO_I  @"A >> i"
-#define SKIP        @"X"
+#define I_TO_DROID  @"ios_to_android"
+#define DROID_TO_I  @"android_to_ios"
+#define SKIP        @"skip"
 
 @interface ZFFileExportCell ()
 
@@ -18,7 +18,7 @@
 
 @end
 
-#define BTN_W       50
+#define BTN_W       100
 
 @implementation ZFFileExportCell
 
@@ -40,10 +40,10 @@
 
 - (void)setLangFile:(ZFTranslationFile *)langFile {
     [super setLangFile:langFile];
-    [self.button setTitle:[self stringFromConversionDriver:self.langFile.conversionDriver]];
+    [self.button setImage:[self imageFromConversionDriver:self.langFile.conversionDriver]];
 }
 
-- (NSString *)stringFromConversionDriver:(ZFTranslationFileConversionDriver)driver {
+- (NSImage *)imageFromConversionDriver:(ZFTranslationFileConversionDriver)driver {
     NSString *conversionS = nil;
     
     switch (driver) {
@@ -58,7 +58,7 @@
             conversionS = SKIP;
             break;
     }
-    return conversionS;
+    return [NSImage imageNamed:conversionS];
 }
 
 - (void)btnAction:(NSButton *)sender {
@@ -79,7 +79,8 @@
     
     
     self.langFile.conversionDriver = newDriver;
-    [self.button setTitle:[self stringFromConversionDriver:self.langFile.conversionDriver]];
+    NSImage *image = [self imageFromConversionDriver:self.langFile.conversionDriver];
+    [self.button setImage:image];
 }
 
 @end

@@ -174,7 +174,9 @@
     [xml setDocumentContentKind:NSXMLDocumentXMLKind];
     [xml setVersion:@"1.0"];
     [xml setCharacterEncoding:@"utf-8"];
-    return [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n%@", [xml XMLString]];
+
+    
+    return [xml XMLStringWithOptions:NSXMLNodePrettyPrint];
 }
 
 #pragma mark - Converters

@@ -1331,7 +1331,7 @@
 											<string key="NSFrameSize">{269, 694}</string>
 											<reference key="NSSuperview" ref="117988353"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="498531503"/>
+											<reference key="NSNextKeyView" ref="296690637"/>
 											<string key="NSReuseIdentifierKey">_NS:13</string>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -1483,7 +1483,7 @@
 							<string key="NSFrame">{{-1, -11}, {271, 712}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="296690637"/>
+							<reference key="NSNextKeyView" ref="117988353"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<int key="NSsFlags">133682</int>
 							<reference key="NSVScroller" ref="837062464"/>
@@ -1509,7 +1509,7 @@
 											<string key="NSFrameSize">{721, 633}</string>
 											<reference key="NSSuperview" ref="700309970"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="539140495"/>
+											<reference key="NSNextKeyView" ref="575000840"/>
 											<string key="NSReuseIdentifierKey">_NS:13</string>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -1642,7 +1642,6 @@
 									<string key="NSFrame">{{1, 119}, {223, 15}}</string>
 									<reference key="NSSuperview" ref="405919396"/>
 									<reference key="NSWindow"/>
-									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:60</string>
 									<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 									<int key="NSsFlags">1</int>
@@ -1669,7 +1668,7 @@
 							<string key="NSFrame">{{278, -1}, {723, 651}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="575000840"/>
+							<reference key="NSNextKeyView" ref="700309970"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<int key="NSsFlags">133682</int>
 							<reference key="NSVScroller" ref="539140495"/>
@@ -1750,10 +1749,11 @@
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSWindowTemplate" id="48217791">
-				<int key="NSWindowStyleMask">31</int>
+				<int key="NSWindowStyleMask">28</int>
+				<bool key="NSWindowAllowNontitledResizable">YES</bool>
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{272, 172}, {450, 378}}</string>
-				<int key="NSWTFlags">-1535638528</int>
+				<int key="NSWTFlags">-461896704</int>
 				<string key="NSWindowTitle">Window</string>
 				<string key="NSWindowClass">NSPanel</string>
 				<nil key="NSViewClass"/>
@@ -1777,7 +1777,7 @@
 											<string key="NSFrameSize">{450, 312}</string>
 											<reference key="NSSuperview" ref="360935431"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="792017930"/>
+											<reference key="NSNextKeyView" ref="199110083"/>
 											<string key="NSReuseIdentifierKey">_NS:13</string>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -1902,7 +1902,7 @@
 							<string key="NSFrame">{{-1, 49}, {452, 330}}</string>
 							<reference key="NSSuperview" ref="234702603"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="199110083"/>
+							<reference key="NSNextKeyView" ref="360935431"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<int key="NSsFlags">133682</int>
 							<reference key="NSVScroller" ref="749135618"/>
@@ -1945,7 +1945,6 @@
 							<string key="NSFrame">{{229, 7}, {213, 32}}</string>
 							<reference key="NSSuperview" ref="234702603"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="372765649">

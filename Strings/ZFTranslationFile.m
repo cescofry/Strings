@@ -10,6 +10,7 @@
 
 #import "ZFTranslationFile.h"
 #import "ZFLangFile.h"
+#import "ZFStringsConverter.h"
 #import "ZFUtils.h"
 
 #define FAV_LANG            @"en"
@@ -87,8 +88,6 @@
     if (!langFile) return;
     if ((langFile.type == ZFLangTypeIOS) && !self.iOSName) self.iOSName = langFile.fileName;
     if ((langFile.type == ZFLangTypeAndorid) && !self.androidName) self.androidName = langFile.fileName;
-    
-    if (self.conversionDriver == ZFTranslationFileConversionDriverSkip) self.conversionDriver = (self.iOSName)? ZFTranslationFileConversionDriverIOS : ZFTranslationFileConversionDriverAndorid;
 }
 
 
@@ -157,6 +156,7 @@
 - (void)fillGaps {
     NSMutableArray *allKeys = [NSMutableArray array];
     NSMutableArray *allLanguages = [NSMutableArray array];
+    __block NSInteger iOSLangCount, androidLangCount = 0;
     
     [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *lang, NSUInteger idx, BOOL *stop) {
         if (![allLanguages containsObject:lang.language]) [allLanguages addObject:lang.language];
@@ -164,7 +164,13 @@
             if ([allKeys containsObject:key]) return;
             [allKeys addObject:key];
         }];
+        
+        if (lang.type == ZFLangTypeIOS) iOSLangCount++;
+        else androidLangCount++;
+        
     }];
+    
+    self.conversionDriver = (iOSLangCount >= androidLangCount)? ZFTranslationFileConversionDriverIOS : ZFTranslationFileConversionDriverAndorid;
     
     _allKeys = [allKeys sortedArrayUsingSelector:@selector(compare:)];
     _allLanguages = [allLanguages sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
@@ -183,6 +189,65 @@
     if (!_allLanguages) [self fillGaps];
     return _allLanguages;
 }
+
+
+#pragma mark - writing 
+
+- (BOOL)writeAllTranslations {
+    
+    if (self.conversionDriver == ZFTranslationFileConversionDriverSkip) return NO;
+    
+    ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
+
+    NSMutableDictionary *couplingLanguages = [NSMutableDictionary dictionary];
+    [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
+        NSMutableArray *files = [couplingLanguages objectForKey:obj.language];
+        if (!files) files = [NSMutableArray array];
+        [files addObject:obj];
+        [couplingLanguages setObject:files forKey:obj.language];
+    }];
+    
+    __block BOOL succeded = YES;
+    [couplingLanguages enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSArray *obj, BOOL *stop) {
+        if (obj.count < 2) {
+            succeded = NO;
+            return;
+        }
+        
+        ZFLangFile *objIOS = [obj objectAtIndex:0];
+        ZFLangFile *objAndorid;
+        if (objIOS.type == ZFLangTypeAndorid) {
+            objAndorid = objIOS;
+            objIOS = [obj objectAtIndex:1];
+        }
+        else {
+            objAndorid = [obj objectAtIndex:1];
+        }
+
+        NSError *error = nil;
+        
+        if (self.conversionDriver == ZFTranslationFileConversionDriverIOS) {
+            NSString *textOutput = [converter xmlStringFromDictionary:objIOS.translations];
+            [textOutput writeToURL:objAndorid.url atomically:YES encoding:NSUTF8StringEncoding error:&error];
+        }
+        else {
+            NSString *textOutput = [converter stringsStringFromDictionary:objAndorid.translations];
+            [textOutput writeToURL:objIOS.url atomically:YES encoding:NSUTF8StringEncoding error:&error];
+        }
+        
+        if (error) {
+            succeded = NO;
+            NSLog(@"Error: %@", error.debugDescription);
+        }
+        
+    }];
+    
+    return succeded;
+}
+
+
+
+#pragma mark - sorting
 
 
 
