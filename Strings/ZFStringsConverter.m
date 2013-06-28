@@ -138,8 +138,9 @@
         NSError *error = nil;
         NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:[obj XMLString] error:&error];
         NSString *key = [element attributeForName:@"name"].stringValue;
-
-        [translation setObject:obj.stringValue forKey:key];
+        NSString *value = [obj.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+        
+        [translation setObject:value forKey:key];
     }];
     
     return (NSDictionary *)translation;
