@@ -7,8 +7,9 @@
 //
 
 #import "ZFExportFilesController.h"
-#import "ZFLangFile.h"
+#import "ZFTranslationFile.h"
 #import "ZFFileExportCell.h"
+#import "ZFStringsConverter.h"
 
 @implementation ZFExportFilesController
 
@@ -20,6 +21,15 @@
 #pragma mark - actions
 
 - (IBAction)exportAction:(id)sender {
+    
+    ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
+    [self.scanner.files enumerateObjectsUsingBlock:^(ZFTranslationFile *langFile, NSUInteger idx, BOOL *stop) {
+        
+    }];
+    
+    
+    
+    
     [self.window close];
 }
 
@@ -35,7 +45,7 @@
 }
 
 - (id)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    ZFLangFile *langFile = [self.scanner.files objectAtIndex:row];
+    ZFTranslationFile *langFile = [self.scanner.files objectAtIndex:row];
     ZFFileExportCell *cell = [tableView makeViewWithIdentifier:@"langExportCell" owner:self];
     [cell setLangFile:langFile];
     

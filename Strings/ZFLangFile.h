@@ -2,27 +2,25 @@
 //  ZFLangFile.h
 //  Strings
 //
-//  Created by Francesco on 26/06/2013.
-//
-//  Open Source Initiative OSI - The MIT License (MIT):Licensing [OSI Approved License] The MIT License (MIT)
-//  Copyright (c) 2013 ziofritz.
+//  Created by Francesco on 28/06/2013.
+//  Copyright (c) 2013 ziofritz. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
+typedef enum {
+    ZFLangTypeIOS,
+    ZFLangTypeAndorid
+} ZFLangType;
+
 @interface ZFLangFile : NSObject
 
-@property (nonatomic, strong) NSString *iOSName;
-@property (nonatomic, strong) NSString *androidName;
+@property (nonatomic, strong, readonly) NSURL *url;
+@property (nonatomic, strong, readonly) NSString *fileName;
+@property (nonatomic, assign, readonly) ZFLangType type;
+@property (nonatomic, strong, readonly) NSString *language;
+@property (nonatomic, strong, readonly) NSMutableDictionary *translations;
 
-@property (nonatomic, strong) NSMutableDictionary *iOStranslations;
-@property (nonatomic, strong) NSMutableDictionary *androidTranslations;
-
-@property (nonatomic, strong) NSArray *allKeys;
-@property (nonatomic, strong) NSArray *allLanguages;
-
-- (BOOL)addFileAtURL:(NSURL *) url;
-- (BOOL)mergeWithFile:(ZFLangFile *)file;
-- (void)finalizeMerge;
+- (id)initWithURL:(NSURL *)url;
 
 @end

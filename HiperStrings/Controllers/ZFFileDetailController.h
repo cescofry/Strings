@@ -9,13 +9,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZFLangFile.h"
+#import "ZFTranslationFile.h"
 
 @interface ZFFileDetailController : NSObject <NSTableViewDataSource, NSTableViewDelegate>
 
 @property (nonatomic, strong) IBOutlet NSSegmentedControl *segmentedControl;
 @property (nonatomic, strong) IBOutlet NSTableView *tableView;
-@property (nonatomic, strong) ZFLangFile *langFile;
+@property (nonatomic, strong) ZFTranslationFile *langFile;
 
 - (IBAction)didSwithSegmentedControl:(NSSegmentedControl *)sender;
 

@@ -15,14 +15,14 @@
 @interface ZFFileDetailController ()
 
 @property (nonatomic, strong) NSArray *keys;
-@property (nonatomic, strong) NSDictionary *rows;
+@property (nonatomic, strong) NSArray *rows;
 @property (nonatomic, strong) NSArray *columns;
 
 @end
 
 @implementation ZFFileDetailController
 
-- (void)setLangFile:(ZFLangFile *)langFile {
+- (void)setLangFile:(ZFTranslationFile *)langFile {
     _langFile = langFile;
     
     self.columns = [[NSArray arrayWithObject:KEY_KEY] arrayByAddingObjectsFromArray:[_langFile allLanguages]];
@@ -53,7 +53,7 @@
 #pragma mark - Segmented Controller
 
 - (IBAction)didSwithSegmentedControl:(NSSegmentedControl *)sender {
-    self.rows = (self.segmentedControl.selectedSegment == 0)? [self.langFile iOStranslations] : [self.langFile androidTranslations];
+    self.rows = [self.langFile translationsByType:(self.segmentedControl.selectedSegment == 0)? ZFLangTypeIOS : ZFLangTypeAndorid andLanguageIdentifier:nil];
     [self.tableView reloadData];
 }
 
@@ -65,7 +65,13 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     if ([tableColumn.identifier isEqualToString:KEY_KEY]) return [self.keys objectAtIndex:row];
-    else return [[self.rows objectForKey:tableColumn.identifier] objectForKey:[self.keys objectAtIndex:row]];
+    else {
+        NSArray *translation = [self.langFile translationsByType:(self.segmentedControl.selectedSegment == 0)? ZFLangTypeIOS : ZFLangTypeAndorid andLanguageIdentifier:tableColumn.identifier];
+        ZFLangFile *lang = [translation lastObject];
+        return [lang.translations objectForKey:[self.keys objectAtIndex:row]];
+    }
+    
+    //return [[self.rows objectForKey:tableColumn.identifier] objectForKey:[self.keys objectAtIndex:row]];
 }
 
 @end

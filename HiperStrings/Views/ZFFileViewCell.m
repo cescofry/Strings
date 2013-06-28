@@ -25,7 +25,7 @@
 }
 
 
-- (void)setLangFile:(ZFLangFile *)langFile {
+- (void)setLangFile:(ZFTranslationFile *)langFile {
     _langFile = langFile;
     if (_langFile.iOSName.length > 0) [self.titleLbl setStringValue:_langFile.iOSName];
     if (_langFile.androidName.length > 0) [self.detailLbl setStringValue:_langFile.androidName];

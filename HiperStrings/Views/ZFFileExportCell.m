@@ -8,6 +8,10 @@
 
 #import "ZFFileExportCell.h"
 
+#define I_TO_DROID  @"i >> A"
+#define DROID_TO_I  @"A >> i"
+#define SKIP        @"X"
+
 @interface ZFFileExportCell ()
 
 @property (nonatomic, strong) NSButton *button;
@@ -34,27 +38,48 @@
     [self addSubview:self.button];
 }
 
-- (void)setLangFile:(ZFLangFile *)langFile {
+- (void)setLangFile:(ZFTranslationFile *)langFile {
     [super setLangFile:langFile];
+    [self.button setTitle:[self stringFromConversionDriver:self.langFile.conversionDriver]];
+}
+
+- (NSString *)stringFromConversionDriver:(ZFTranslationFileConversionDriver)driver {
+    NSString *conversionS = nil;
     
-    NSString *btnTxt = (langFile.iOSName)? @"i" : @"A";
-    [self.button setStringValue:btnTxt];
+    switch (driver) {
+        case ZFTranslationFileConversionDriverIOS:
+            conversionS = I_TO_DROID;
+            break;
+        case ZFTranslationFileConversionDriverAndorid:
+            conversionS = DROID_TO_I;
+            break;
+        case ZFTranslationFileConversionDriverSkip:
+        default:
+            conversionS = SKIP;
+            break;
+    }
+    return conversionS;
 }
 
 - (void)btnAction:(NSButton *)sender {
-    NSString *btnTxt = sender.stringValue;
-    if ([btnTxt isEqualToString:@"i"]) {
-        if (self.langFile.androidName) btnTxt = @"A";
-        else btnTxt = @"X";
-    }
-    if ([btnTxt isEqualToString:@"A"]) {
-        btnTxt = @"X";
+    ZFTranslationFileConversionDriver newDriver;
+    switch (self.langFile.conversionDriver) {
+        case ZFTranslationFileConversionDriverIOS:
+            newDriver = (self.langFile.androidName)? ZFTranslationFileConversionDriverAndorid : ZFTranslationFileConversionDriverSkip;
+            break;
+        case ZFTranslationFileConversionDriverAndorid:
+            newDriver = ZFTranslationFileConversionDriverSkip;
+            break;
+        case ZFTranslationFileConversionDriverSkip:
+            newDriver = (self.langFile.iOSName)? ZFTranslationFileConversionDriverIOS : ZFTranslationFileConversionDriverAndorid;
+            break;
+        default:
+            break;
     }
     
-    if ([btnTxt isEqualToString:@"X"]) {
-        if (self.langFile.iOSName) btnTxt = @"i";
-        else btnTxt = @"A";
-    }
+    
+    self.langFile.conversionDriver = newDriver;
+    [self.button setTitle:[self stringFromConversionDriver:self.langFile.conversionDriver]];
 }
 
 @end

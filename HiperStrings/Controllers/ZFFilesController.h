@@ -12,7 +12,7 @@
 #import "ZFFileDetailController.h"
 #import "ZFExportFilesController.h"
 
-@interface ZFFilesController : NSObject <NSTableViewDataSource, NSTableViewDelegate>
+@interface ZFFilesController : NSObject <NSTableViewDataSource, NSTableViewDelegate, NSWindowDelegate>
 
 @property (nonatomic, strong) IBOutlet ZFFileDetailController *fileDetailController;
 @property (nonatomic, strong) IBOutlet NSTableView *filesTable;

@@ -9,11 +9,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "ZFLangFile.h"
+#import "ZFTranslationFile.h"
 
 @interface ZFFileViewCell : NSTableCellView
 
-@property (nonatomic, strong) ZFLangFile *langFile;
+@property (nonatomic, strong) ZFTranslationFile *langFile;
 @property (nonatomic, strong) NSTextField *titleLbl;
 @property (nonatomic, strong) NSTextField *detailLbl;
 

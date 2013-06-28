@@ -10,7 +10,7 @@
 
 #import "ZFAppDelegate.h"
 #import "ZFStringScanner.h"
-#import "ZFLangFile.h"
+#import "ZFTranslationFile.h"
 
 @interface ZFAppDelegate ()
 

@@ -10,7 +10,7 @@
 
 #import "ZFStringScanner.h"
 #import "ZFStringsConverter.h"
-#import "ZFLangFile.h"
+#import "ZFTranslationFile.h"
 
 @interface ZFStringScanner ()
 
@@ -62,7 +62,7 @@
         
         if (!isDir) {           
     
-            ZFLangFile *file = [[ZFLangFile alloc] init];
+            ZFTranslationFile *file = [[ZFTranslationFile alloc] init];
             BOOL valid = [file addFileAtURL:fileURL];
             if (valid) [self.files addObject:file];
             
@@ -88,7 +88,7 @@
     [self scanAtURL:URL];
     
     NSMutableArray *groups = [NSMutableArray array];
-    [self.files enumerateObjectsUsingBlock:^(ZFLangFile *file, NSUInteger idx, BOOL *stop) {
+    [self.files enumerateObjectsUsingBlock:^(ZFTranslationFile *file, NSUInteger idx, BOOL *stop) {
         __block BOOL inserted = NO;
         [groups enumerateObjectsUsingBlock:^(NSMutableArray *group, NSUInteger idx, BOOL *stop) {
             if ([file isEqual:[group objectAtIndex:0]]) {
@@ -103,8 +103,8 @@
     
     NSMutableArray *result = [NSMutableArray array];
     [groups enumerateObjectsUsingBlock:^(NSMutableArray *group, NSUInteger idx, BOOL *stop) {
-        ZFLangFile *file = [group objectAtIndex:0];
-        [group enumerateObjectsUsingBlock:^(ZFLangFile *anotherFile, NSUInteger idx, BOOL *stop) {
+        ZFTranslationFile *file = [group objectAtIndex:0];
+        [group enumerateObjectsUsingBlock:^(ZFTranslationFile *anotherFile, NSUInteger idx, BOOL *stop) {
             if (idx == 0) return;
             [file mergeWithFile:anotherFile];
         }];

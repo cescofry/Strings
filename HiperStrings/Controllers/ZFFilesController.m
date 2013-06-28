@@ -11,7 +11,7 @@
 #import "ZFFilesController.h"
 #import "ZFFileViewCell.h"
 #import "ZFStringScanner.h"
-#import "ZFLangFile.h"
+#import "ZFTranslationFile.h"
 
 @interface ZFFilesController ()
 
@@ -61,31 +61,6 @@
                                       contextInfo:nil];
 }
 
-- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-    /*
-    NSEnumerator *enumerator;
-    NSNumber *index;
-    NSMutableArray *tempArray;
-    id tempObject;
-    
-    if ( returnCode == NSAlertDefaultReturn ) {
-        enumerator = [tableView selectedRowEnumerator];
-        tempArray = [NSMutableArray array];
-        
-        while ( (index = [enumerator nextObject]) ) {
-            tempObject = [records objectAtIndex:[index intValue]];
-            [tempArray addObject:tempObject];
-        }
-        
-        [records removeObjectsInArray:tempArray];
-        [tableView reloadData];
-        [self saveData];  
-    }
-     */
-}
-
-
 - (void)setURLFromDialog:(void (^)(BOOL success)) completed {
     NSOpenPanel* openDlg = [NSOpenPanel openPanel];
     [openDlg setCanChooseFiles:NO];
@@ -107,6 +82,8 @@
     else [openDlg beginSheetModalForWindow:self.window completionHandler:completitionBlock];
 }
 
+#pragma mark - NSTableViewDelegate
+
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
     return [self.scanner.files count];
 }
@@ -121,6 +98,12 @@
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row {
     if (self.fileDetailController) [self.fileDetailController setLangFile:[self.scanner.files objectAtIndex:row]];
     return YES;
+}
+
+#pragma mark NSWindowDelegate
+
+- (void)windowWillClose:(NSNotification *)notification {
+    NSWindow *window = [notification object];
 }
 
 @end
