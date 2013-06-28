@@ -134,6 +134,7 @@
         [self.iOStranslations setObject:obj forKey:key];
         mergeIOS = YES;
     }];
+    if (!self.iOSName && file.iOSName) self.iOSName = file.iOSName;
     
     __block BOOL mergeAndroid = NO;
     [file.androidTranslations enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *obj, BOOL *stop) {
@@ -142,6 +143,10 @@
         [self.androidTranslations setObject:obj forKey:key];
         mergeAndroid = YES;
     }];
+    
+    
+    if (!self.androidName && file.androidName) self.androidName = file.androidName;
+    
     
     BOOL didMerge = (mergeIOS || mergeAndroid);
     if (didMerge) {
