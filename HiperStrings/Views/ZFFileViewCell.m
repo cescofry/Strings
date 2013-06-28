@@ -10,38 +10,25 @@
 
 #import "ZFFileViewCell.h"
 
-@interface ZFFileViewCell ()
-
-@property (nonatomic, strong) NSTextView *titleLbl;
-@property (nonatomic, strong) NSTextView *detailLbl;
-
-@end
-
 @implementation ZFFileViewCell
 
-- (id)initWithFrame:(NSRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code here.
-        frame = self.bounds;
-        frame.size.height = ceil(frame.size.height /2);
-        self.titleLbl = [[NSTextView alloc] initWithFrame:frame];
-        [self addSubview:self.titleLbl];
-        
-        frame.origin.y += frame.size.height;
-        self.detailLbl = [[NSTextView alloc] initWithFrame:frame];
-        [self addSubview:self.detailLbl];
-    }
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    NSRect frame = self.bounds;
+    frame.size.height = ceil(frame.size.height /2);
+    self.titleLbl = [[NSTextField alloc] initWithFrame:frame];
+    [self addSubview:self.titleLbl];
     
-    return self;
+    frame.origin.y += frame.size.height;
+    self.detailLbl = [[NSTextField alloc] initWithFrame:frame];
+    [self addSubview:self.detailLbl];
 }
+
 
 - (void)setLangFile:(ZFLangFile *)langFile {
     _langFile = langFile;
-    if (_langFile.iOSName.length > 0) [self.textField setStringValue:_langFile.iOSName];
-    
-    if (_langFile.androidName.length > 0) [self.textField setStringValue:_langFile.androidName];
+    if (_langFile.iOSName.length > 0) [self.titleLbl setStringValue:_langFile.iOSName];
+    if (_langFile.androidName.length > 0) [self.detailLbl setStringValue:_langFile.androidName];
 }
 
 - (void)drawRect:(NSRect)dirtyRect

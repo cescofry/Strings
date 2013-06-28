@@ -10,11 +10,18 @@
 
 #import <Foundation/Foundation.h>
 #import "ZFFileDetailController.h"
+#import "ZFExportFilesController.h"
 
 @interface ZFFilesController : NSObject <NSTableViewDataSource, NSTableViewDelegate>
 
 @property (nonatomic, strong) IBOutlet ZFFileDetailController *fileDetailController;
 @property (nonatomic, strong) IBOutlet NSTableView *filesTable;
+@property (nonatomic, strong) IBOutlet NSButton *exportBtn;
 @property (assign) IBOutlet NSWindow *window;
+@property (assign) IBOutlet NSPanel *exportPanel;
+
+@property (nonatomic, strong) IBOutlet ZFExportFilesController *exportController;
+
+- (IBAction)exportAction:(id)sender;
 
 @end

@@ -14,5 +14,7 @@
 @interface ZFFileViewCell : NSTableCellView
 
 @property (nonatomic, strong) ZFLangFile *langFile;
+@property (nonatomic, strong) NSTextField *titleLbl;
+@property (nonatomic, strong) NSTextField *detailLbl;
 
 @end

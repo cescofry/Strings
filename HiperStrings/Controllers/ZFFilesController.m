@@ -52,6 +52,39 @@
     }];
 }
 
+- (IBAction)exportAction:(id)sender {
+    [self.exportController setScanner:self.scanner];
+    [[NSApplication sharedApplication] beginSheet:self.exportPanel
+                                   modalForWindow:self.window
+                                    modalDelegate:self
+                                   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
+                                      contextInfo:nil];
+}
+
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    /*
+    NSEnumerator *enumerator;
+    NSNumber *index;
+    NSMutableArray *tempArray;
+    id tempObject;
+    
+    if ( returnCode == NSAlertDefaultReturn ) {
+        enumerator = [tableView selectedRowEnumerator];
+        tempArray = [NSMutableArray array];
+        
+        while ( (index = [enumerator nextObject]) ) {
+            tempObject = [records objectAtIndex:[index intValue]];
+            [tempArray addObject:tempObject];
+        }
+        
+        [records removeObjectsInArray:tempArray];
+        [tableView reloadData];
+        [self saveData];  
+    }
+     */
+}
+
 
 - (void)setURLFromDialog:(void (^)(BOOL success)) completed {
     NSOpenPanel* openDlg = [NSOpenPanel openPanel];
