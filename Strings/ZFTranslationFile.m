@@ -211,6 +211,16 @@
 
 #pragma mark - writing 
 
+/*!
+ @abstract
+ Generate the missing file URL extrapolated form the reference file
+ 
+ @param langFile the receiving file to be chnaged
+ 
+ @param referenceLangFile reference to generate the url
+ 
+ */
+
 - (void)convertURLForLanguage:(ZFLangFile *)langFile fromLangFile:(ZFLangFile *)referenceLangFile {
     if (langFile.url) return;
     
@@ -228,6 +238,16 @@
     NSError *error = nil;
     [[NSFileManager defaultManager] createDirectoryAtURL:[langFile.url URLByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&error];
 }
+
+/*!
+ @abstract
+ Takes all the translations and write the files accordingly to the driven option
+ 
+ @return BOOL if the process succeded or not
+ 
+ @discussion At the moment the process is only generating the non-driven file. However this is wrong. Because the list of transaltion is merged between iOS and Android, and the driven file would not receive the new keys.
+ 
+ */
 
 - (BOOL)writeAllTranslations {
     
@@ -282,7 +302,19 @@
 
 #pragma mark - sorting
 
-
+/*!
+ @abstract
+ sorted array of languages by type and language identifier
+ 
+ @param type to be searched. Must not be ignored
+ 
+ @param identifier to be searched. Can be nil
+ 
+ @return NSArray of translations
+ 
+ @discussion The tye argument is compulsory amd setting it to 0 will trigger iOS results. To be ammended in the future.
+ 
+ */
 
 - (NSArray *)translationsByType:(ZFLangType)type andLanguageIdentifier:(NSString *)identifier {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %d && language = %@", type, identifier];
