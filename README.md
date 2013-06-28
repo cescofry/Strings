@@ -12,10 +12,11 @@ The core library at the moment is
 
 
 ###Documentations
-There are 4 classes part of the core library, which are the one doing most of the heavy lifting to aggregate and translate the files.<br>
+There are 5 classes part of the core library, which are the one doing most of the heavy lifting to aggregate and translate the files.<br>
 Those are:<br>
 
-- ZFLangFile - Rapresentation of a language file, contaninng all the languages translations for both iOS and Android
+- ZFTRanslationFile - Rapresentation of a language package, contaninng all the languages translations for both iOS and Android
+- ZFLangFile - REpresenation of lang file. Contains as single set of translations for one lnaguage identifier and one OS
 - ZFStringScanner - goes through all the forlders form a given root one and generates the ZFLangFiles
 - ZFStringsConverter - Feed with a URL of a string file will generate the dicotionary of transaltions. Also will reconvert a dictionary to iOS or Android file given a URL. It is used by ZFLanfFile to generate the translations
 - ZFUtils - Singletons with commons tasks. Pretty empty at the moment
