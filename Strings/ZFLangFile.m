@@ -9,7 +9,15 @@
 #import "ZFLangFile.h"
 #import "ZFStringsConverter.h"
 
+@interface ZFLangFile ()
+
+@property (nonatomic, strong) NSArray *keysAndComments;
+
+@end
+
 @implementation ZFLangFile
+
+@synthesize allKeys = _allKeys;
 
 
 /*!
@@ -37,12 +45,36 @@
         _language = lang;
         
         ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
-        NSDictionary *translations = (isIOS)? [converter translationsForStringsAtURL:url] : [converter translationsForXMLAtURL:url];
+        NSArray *translations = (isIOS)? [converter translationsForStringsAtURL:url] : [converter translationsForXMLAtURL:url];
         
-        _translations = [NSMutableDictionary dictionaryWithDictionary:translations];
+        _translations = [NSMutableArray arrayWithArray:translations];
     }
     return self;
 
+}
+
+#pragma  mark - keys
+
+- (void)extractKeys {
+    self.keysAndComments = [self.translations valueForKey:@"key"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"NOT (self BEGINSWITH %@)", @"*"];
+    _allKeys = [self.keysAndComments filteredArrayUsingPredicate:predicate];
+}
+
+- (NSArray *)keysAndComments {
+    if (!_keysAndComments) [self extractKeys];
+    return _keysAndComments;
+}
+
+- (NSArray *)allKeys {
+    if (!_allKeys) [self extractKeys];
+    return _allKeys;
+}
+
+- (ZFTranslationLine *)lineForKey:(NSString *)key {
+    NSUInteger index = [self.keysAndComments indexOfObject:key];
+    if (index == NSNotFound) return nil;
+    return [self.translations objectAtIndex:index];
 }
 
 @end

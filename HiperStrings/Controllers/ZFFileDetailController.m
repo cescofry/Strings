@@ -68,7 +68,7 @@
     else {
         NSArray *translation = [self.langFile translationsByType:(self.segmentedControl.selectedSegment == 0)? ZFLangTypeIOS : ZFLangTypeAndorid andLanguageIdentifier:tableColumn.identifier];
         ZFLangFile *lang = [translation lastObject];
-        return [lang.translations objectForKey:[self.keys objectAtIndex:row]];
+        return [[lang lineForKey:[self.keys objectAtIndex:row]] value];
     }
     
     //return [[self.rows objectForKey:tableColumn.identifier] objectForKey:[self.keys objectAtIndex:row]];

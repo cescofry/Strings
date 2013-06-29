@@ -64,7 +64,7 @@
     
     NSDictionary *xmlTranslations = [self.converter translationsForXMLAtURL:xmlURL];
     
-    NSMutableArray *allKeys = [NSMutableArray arrayWithArray:stringsTranslations.allKeys];
+    NSMutableArray *allKeys = [NSMutableArray arrayWithArray:[stringsTranslation allKeys]];
     
     [xmlTranslations enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *stop) {
         [allKeys removeObject:key];

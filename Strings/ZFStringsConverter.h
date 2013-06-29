@@ -12,15 +12,11 @@
 
 @interface ZFStringsConverter : NSObject
 
-- (void)convertStringsAtURL:(NSURL *)stringsURL toXMLAtURL:(NSURL *)XMLURL  __deprecated;
-- (void)convertXMLAtURL:(NSURL *)XMLURL toStringsAtURL:(NSURL *)stringsURL  __deprecated;
+- (NSArray *)translationsForXMLAtURL:(NSURL *)XMLURL;
+- (NSString *)xmlStringFromTranslations:(NSArray *)translations;
 
-
-- (NSDictionary *)translationsForXMLAtURL:(NSURL *)XMLURL;
-- (NSString *)xmlStringFromDictionary:(NSDictionary *)dictionary;
-
-- (NSString *)stringsStringFromDictionary:(NSDictionary *)dictionary;
-- (NSDictionary *)translationsForStringsAtURL:(NSURL *)stringsURL;
+- (NSString *)stringsStringFromTranslations:(NSArray *)translations;
+- (NSArray *)translationsForStringsAtURL:(NSURL *)stringsURL;
 
 - (NSString *)convertFormatForString:(NSString *)input isIOS:(BOOL)isIOS;
 

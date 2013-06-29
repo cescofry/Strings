@@ -10,6 +10,7 @@
 
 #import "ZFStringsConverter.h"
 #import "Config.h"
+#import "ZFTranslationLine.h"
 
 @implementation ZFStringsConverter
 
@@ -61,17 +62,17 @@
  
  @param stringsURL the url of the file to be converted
  
- @return NSDictionary with the translations
+ @return NSArray with the translations
  
  @discussion The comments are not recorded so they are lost in this fase already. The same is true for the key sorting which is likely to become alphabetical in the process
  
  */
 
-- (NSDictionary *)translationsForStringsAtURL:(NSURL *)stringsURL {
+- (NSArray *)translationsForStringsAtURL:(NSURL *)stringsURL {
     
     if (!stringsURL) return nil;
     
-    NSMutableDictionary *translation = [NSMutableDictionary dictionary];
+    NSMutableArray *translation = [NSMutableArray array];
     
     NSStringEncoding encoding;
     NSError *error;
@@ -87,29 +88,35 @@
         NSString *key = [stringsString substringWithRange:[match rangeAtIndex:1]];
         NSString *value = [stringsString substringWithRange:[match rangeAtIndex:2]];
         
-        [translation setObject:value forKey:key];
+        ZFTranslationLine *line = [ZFTranslationLine line];
+        [line setKey:key];
+        [line setValue:value];
+        [line setPosition:idx];
+        
+        [translation addObject:line];
     }];
     
-    return (NSDictionary *)translation;
+    return (NSArray *)translation;
     
 }
 
 /*!
  @abstract
- Parse the dictionary of translations to a string ready to be written to a .strings file
+ Parse the translations to a string ready to be written to a .strings file
  
- @param dictionary of translations
+ @param array of translations
  
  @return NSString ready in .strings format
  
  */
 
-- (NSString *)stringsStringFromDictionary:(NSDictionary *)dictionary {
+- (NSString *)stringsStringFromTranslations:(NSArray *)translations {
     
     NSMutableString *stringsString = [NSMutableString string];
     
-    [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
-        [stringsString appendFormat:@"\"%@\" = \"%@\";\n", key, [self convertFormatForString:obj isIOS:YES]];
+    [translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
+        NSString *value = (line.type == ZFTranslationLineTypeFormattedString)? [self convertFormatForString:line.value isIOS:YES] : line.value;
+        [stringsString appendFormat:@"\"%@\" = \"%@\";\n", line.key, value];
     }];
     
     return (NSString *)stringsString;
@@ -126,12 +133,15 @@
  
  @param MLXURL of the file to be converted
  
- @return NSDictionary with the translations
+ @return NSArray with the translations
  
  */
 
-- (NSDictionary *)translationsForXMLAtURL:(NSURL *)XMLURL {
-    NSMutableDictionary *translation = [NSMutableDictionary dictionary];
+- (NSArray *)translationsForXMLAtURL:(NSURL *)XMLURL {
+    if (!XMLURL) return nil;
+    
+    NSMutableArray *translation = [NSMutableArray array];
+    
     NSError *error = nil;
     NSXMLDocument *xml = [[NSXMLDocument alloc] initWithContentsOfURL:XMLURL options:NSDataReadingMappedIfSafe error:&error];
     NSArray *nodes = [xml nodesForXPath:@"//resources/string" error:&error];
@@ -141,17 +151,22 @@
         NSString *key = [element attributeForName:@"name"].stringValue;
         NSString *value = [obj.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
         
-        [translation setObject:value forKey:key];
+        ZFTranslationLine *line = [ZFTranslationLine line];
+        [line setKey:key];
+        [line setValue:value];
+        [line setPosition:idx];
+        
+        [translation addObject:line];
     }];
     
-    return (NSDictionary *)translation;
+    return (NSArray *)translation;
 }
 
 /*!
  @abstract
  Parse the dictionary of transaltions to a string ready to be written on an .xml file
  
- @param dictionary with the transaltions
+ @param array with the transaltions
  
  @return NSString ready to be written to an .xml file
  
@@ -159,13 +174,15 @@
  
  */
 
-- (NSString *)xmlStringFromDictionary:(NSDictionary *)dictionary {
+- (NSString *)xmlStringFromTranslations:(NSArray *)translations {
     
     NSMutableArray *elements = [NSMutableArray array];
-    [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
+    [translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
+
         NSXMLElement *element = [NSXMLElement elementWithName:@"string"];
-        [element setAttributesAsDictionary:@{@"name" : key}];
-        [element setStringValue:[self convertFormatForString:obj isIOS:NO]];
+        [element setAttributesAsDictionary:@{@"name" : line.key}];
+        NSString *value = (line.type == ZFTranslationLineTypeFormattedString)? [self convertFormatForString:line.value isIOS:NO] : line.value;
+        [element setStringValue:value];
         
         [elements addObject:element];
     }];
@@ -178,25 +195,6 @@
 
     
     return [xml XMLStringWithOptions:NSXMLNodePrettyPrint];
-}
-
-#pragma mark - Converters
-
-- (void)convertStringsAtURL:(NSURL *)stringsURL toXMLAtURL:(NSURL *)XMLURL __deprecated{
-    NSDictionary *translations = [self translationsForStringsAtURL:stringsURL];
-    NSString *translationsString = [self xmlStringFromDictionary:translations];
-    
-    NSError *error;
-    [translationsString writeToURL:XMLURL atomically:YES encoding:NSUTF8StringEncoding error:&error];
-}
-
-
-- (void)convertXMLAtURL:(NSURL *)XMLURL toStringsAtURL:(NSURL *)stringsURL  __deprecated{
-    NSDictionary *translations = [self translationsForXMLAtURL:XMLURL];
-    NSString *translationsString = [self stringsStringFromDictionary:translations];
-    
-    NSError *error;
-    [translationsString writeToURL:stringsURL atomically:YES encoding:NSUTF8StringEncoding error:&error];
 }
 
 @end

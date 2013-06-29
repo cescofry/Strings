@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ZFTranslationLine.h"
 
 typedef enum {
     ZFLangTypeIOS,
@@ -19,8 +20,10 @@ typedef enum {
 @property (nonatomic, strong, readonly) NSString *fileName;
 @property (nonatomic, assign, readonly) ZFLangType type;
 @property (nonatomic, strong, readonly) NSString *language;
-@property (nonatomic, strong, readonly) NSMutableDictionary *translations;
+@property (nonatomic, strong, readonly) NSArray *allKeys;
+@property (nonatomic, strong, readonly) NSMutableArray *translations;
 
 - (id)initWithURL:(NSURL *)url;
+- (ZFTranslationLine *)lineForKey:(NSString *)key;
 
 @end

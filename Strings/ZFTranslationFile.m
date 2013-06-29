@@ -51,9 +51,9 @@
         
         _hashKeys = [self allKeys];
         if (!_hashKeys || _hashKeys.count < KEY_COMAPARISON) {
-                        
+            
             [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
-                _hashKeys = obj.translations.allKeys;
+                _hashKeys = [obj.translations valueForKey:@"key"];
                 *stop = (_hashKeys.count >= KEY_COMAPARISON);
             }];
             
@@ -177,7 +177,7 @@
     
     [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *lang, NSUInteger idx, BOOL *stop) {
         if (![allLanguages containsObject:lang.language]) [allLanguages addObject:lang.language];
-        [lang.translations.allKeys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
+        [[lang allKeys] enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
             if ([allKeys containsObject:key]) return;
             [allKeys addObject:key];
         }];
@@ -280,11 +280,11 @@
         NSError *error = nil;
         
         if (self.conversionDriver == ZFTranslationFileConversionDriverIOS) {
-            NSString *textOutput = [converter xmlStringFromDictionary:objIOS.translations];
+            NSString *textOutput = [converter xmlStringFromTranslations:objIOS.translations];
             [textOutput writeToURL:objAndorid.url atomically:YES encoding:NSUTF8StringEncoding error:&error];
         }
         else {
-            NSString *textOutput = [converter stringsStringFromDictionary:objAndorid.translations];
+            NSString *textOutput = [converter stringsStringFromTranslations:objAndorid.translations];
             [textOutput writeToURL:objIOS.url atomically:YES encoding:NSUTF8StringEncoding error:&error];
         }
         

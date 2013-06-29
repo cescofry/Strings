@@ -44,6 +44,8 @@
 		1371BBD8177D8E63008EB467 /* ZFExportFilesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBD7177D8E63008EB467 /* ZFExportFilesController.m */; };
 		1371BBDB177D90DD008EB467 /* ZFFileExportCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBDA177D90DD008EB467 /* ZFFileExportCell.m */; };
 		1371BBDE177DBDD9008EB467 /* ZFLangFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBDD177DBDD9008EB467 /* ZFLangFile.m */; };
+		137CBEA6177F2556003C472E /* ZFTranslationLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 137CBEA5177F2556003C472E /* ZFTranslationLine.m */; };
+		137CBEA7177F2B7F003C472E /* ZFTranslationLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 137CBEA5177F2556003C472E /* ZFTranslationLine.m */; };
 		13B17AED177AFB6000C0473E /* ZFTranslationFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */; };
 		13B17AEE177AFE2800C0473E /* ZFTranslationFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */; };
 		13B17AEF177AFE2800C0473E /* ZFTranslationFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */; };
@@ -122,6 +124,8 @@
 		1371BBDA177D90DD008EB467 /* ZFFileExportCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFFileExportCell.m; path = Views/ZFFileExportCell.m; sourceTree = "<group>"; };
 		1371BBDC177DBDD9008EB467 /* ZFLangFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFLangFile.h; sourceTree = "<group>"; };
 		1371BBDD177DBDD9008EB467 /* ZFLangFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFLangFile.m; sourceTree = "<group>"; };
+		137CBEA4177F2556003C472E /* ZFTranslationLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFTranslationLine.h; sourceTree = "<group>"; };
+		137CBEA5177F2556003C472E /* ZFTranslationLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFTranslationLine.m; sourceTree = "<group>"; };
 		13B17AEB177AFB6000C0473E /* ZFTranslationFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFTranslationFile.h; sourceTree = "<group>"; };
 		13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFTranslationFile.m; sourceTree = "<group>"; };
 		13B17AF0177B02F700C0473E /* ZFUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFUtils.h; sourceTree = "<group>"; };
@@ -236,6 +240,8 @@
 				13B17AF1177B02F700C0473E /* ZFUtils.m */,
 				1371BBDC177DBDD9008EB467 /* ZFLangFile.h */,
 				1371BBDD177DBDD9008EB467 /* ZFLangFile.m */,
+				137CBEA4177F2556003C472E /* ZFTranslationLine.h */,
+				137CBEA5177F2556003C472E /* ZFTranslationLine.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -469,6 +475,7 @@
 				13B17AED177AFB6000C0473E /* ZFTranslationFile.m in Sources */,
 				13B17AF2177B02F700C0473E /* ZFUtils.m in Sources */,
 				1371BBDE177DBDD9008EB467 /* ZFLangFile.m in Sources */,
+				137CBEA6177F2556003C472E /* ZFTranslationLine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,6 +496,7 @@
 				1371BBD8177D8E63008EB467 /* ZFExportFilesController.m in Sources */,
 				1371BBDB177D90DD008EB467 /* ZFFileExportCell.m in Sources */,
 				1323015F177DD7DD008EB3D5 /* ZFLangFile.m in Sources */,
+				137CBEA7177F2B7F003C472E /* ZFTranslationLine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
