@@ -41,7 +41,7 @@
 #pragma mark - TAbleView Delegate
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    int count = self.scanner.files.count;
+    NSInteger count = self.scanner.files.count;
     return count;
 }
 

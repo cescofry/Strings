@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
+    ZFTranslationLineTypeUnknown,
     ZFTranslationLineTypeString,
     ZFTranslationLineTypeFormattedString,
     ZFTranslationLineTypeComment

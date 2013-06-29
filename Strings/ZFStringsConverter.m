@@ -81,17 +81,33 @@
     if (!stringsString || stringsString.length == 0) return nil;
     
     NSRegularExpression *regEx = [NSRegularExpression regularExpressionWithPattern:ZF_IOS_REGEX options:NSRegularExpressionAnchorsMatchLines error:&error];
+    NSRegularExpression *commentRegEx = [NSRegularExpression regularExpressionWithPattern:ZF_IOS_COMMENT_REGEX options:0 error:&error];
     
     NSArray *matches = [regEx matchesInString:stringsString options:NSMatchingReportCompletion range:NSMakeRange(0, stringsString.length)];
+    NSArray *comments = [commentRegEx matchesInString:stringsString options:NSMatchingReportCompletion range:NSMakeRange(0, stringsString.length)];
+    
+    matches = [[matches arrayByAddingObjectsFromArray:comments] sortedArrayUsingComparator:^NSComparisonResult(NSTextCheckingResult *obj1, NSTextCheckingResult *obj2) {
+        return (obj1.range.location < obj2.range.location)? NSOrderedAscending : NSOrderedDescending;
+    }];
+    
+    
     [matches enumerateObjectsUsingBlock:^(NSTextCheckingResult *match, NSUInteger idx, BOOL *stop) {
-        if ([match numberOfRanges] < 2) return;
-        NSString *key = [stringsString substringWithRange:[match rangeAtIndex:1]];
-        NSString *value = [stringsString substringWithRange:[match rangeAtIndex:2]];
-        
         ZFTranslationLine *line = [ZFTranslationLine line];
-        [line setKey:key];
-        [line setValue:value];
-        [line setPosition:idx];
+        if ([match numberOfRanges] > 2) {
+            NSString *key = [stringsString substringWithRange:[match rangeAtIndex:1]];
+            NSString *value = [stringsString substringWithRange:[match rangeAtIndex:2]];
+            
+            [line setKey:key];
+            [line setValue:value];
+            [line setPosition:idx];            
+        }
+        else {
+            NSString *value = [stringsString substringWithRange:[match range]];
+            [line setKey:[NSString stringWithFormat:@"*_comment_%ld", idx]];
+            [line setValue:value];
+            [line setPosition:idx];
+            [line setType:ZFTranslationLineTypeComment];
+        }
         
         [translation addObject:line];
     }];
@@ -179,12 +195,21 @@
     NSMutableArray *elements = [NSMutableArray array];
     [translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
 
-        NSXMLElement *element = [NSXMLElement elementWithName:@"string"];
-        [element setAttributesAsDictionary:@{@"name" : line.key}];
-        NSString *value = (line.type == ZFTranslationLineTypeFormattedString)? [self convertFormatForString:line.value isIOS:NO] : line.value;
-        [element setStringValue:value];
+        if (line.type == ZFTranslationLineTypeComment) {
+            NSXMLElement *element = [[NSXMLElement alloc] initWithKind:NSXMLCommentKind];
+            [element setStringValue:line.value];
+            
+            [elements addObject:element];
+        }
+        else {
+            NSXMLElement *element = [NSXMLElement elementWithName:@"string"];
+            [element setAttributesAsDictionary:@{@"name" : line.key}];
+            NSString *value = (line.type == ZFTranslationLineTypeFormattedString)? [self convertFormatForString:line.value isIOS:NO] : line.value;
+            [element setStringValue:value];
+            
+            [elements addObject:element];
+        }
         
-        [elements addObject:element];
     }];
     
     NSXMLElement *root = [NSXMLElement elementWithName:@"resources" children:elements attributes:nil];
