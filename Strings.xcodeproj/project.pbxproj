@@ -46,6 +46,9 @@
 		1371BBDE177DBDD9008EB467 /* ZFLangFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBDD177DBDD9008EB467 /* ZFLangFile.m */; };
 		137CBEA6177F2556003C472E /* ZFTranslationLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 137CBEA5177F2556003C472E /* ZFTranslationLine.m */; };
 		137CBEA7177F2B7F003C472E /* ZFTranslationLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 137CBEA5177F2556003C472E /* ZFTranslationLine.m */; };
+		137CBEA8177F581E003C472E /* ZFLangFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBDD177DBDD9008EB467 /* ZFLangFile.m */; };
+		137CBEA9177F5820003C472E /* ZFTranslationLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 137CBEA5177F2556003C472E /* ZFTranslationLine.m */; };
+		137CBEAA177F5828003C472E /* ZFStringScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 134E990B1779A80700D7D54B /* ZFStringScanner.m */; };
 		13B17AED177AFB6000C0473E /* ZFTranslationFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */; };
 		13B17AEE177AFE2800C0473E /* ZFTranslationFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */; };
 		13B17AEF177AFE2800C0473E /* ZFTranslationFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */; };
@@ -509,6 +512,9 @@
 				134E992C1779E6B300D7D54B /* ZFStringsConverter.m in Sources */,
 				13B17AEF177AFE2800C0473E /* ZFTranslationFile.m in Sources */,
 				13B17AF4177B052100C0473E /* ZFUtils.m in Sources */,
+				137CBEA8177F581E003C472E /* ZFLangFile.m in Sources */,
+				137CBEA9177F5820003C472E /* ZFTranslationLine.m in Sources */,
+				137CBEAA177F5828003C472E /* ZFStringScanner.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
