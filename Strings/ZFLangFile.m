@@ -56,9 +56,12 @@
 #pragma  mark - keys
 
 - (void)extractKeys {
-    self.keysAndComments = [self.translations valueForKey:@"key"];
+    _keysAndComments = [self.translations valueForKey:@"key"];
+    if (!_keysAndComments) _keysAndComments = [NSArray array];
+    
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"NOT (self BEGINSWITH %@)", @"*"];
     _allKeys = [self.keysAndComments filteredArrayUsingPredicate:predicate];
+    if (!_allKeys) _allKeys = [NSArray array];
 }
 
 - (NSArray *)keysAndComments {

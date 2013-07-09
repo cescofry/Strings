@@ -93,6 +93,7 @@
     
     NSMutableArray *groups = [NSMutableArray array];
     [self.files enumerateObjectsUsingBlock:^(ZFTranslationFile *file, NSUInteger idx, BOOL *stop) {
+        
         __block BOOL inserted = NO;
         [groups enumerateObjectsUsingBlock:^(NSMutableArray *group, NSUInteger idx, BOOL *stop) {
             if ([file isEqual:[group objectAtIndex:0]]) {

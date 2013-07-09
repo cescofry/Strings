@@ -18,6 +18,6 @@
 - (NSString *)stringsStringFromTranslations:(NSArray *)translations;
 - (NSArray *)translationsForStringsAtURL:(NSURL *)stringsURL;
 
-- (NSString *)convertFormatForString:(NSString *)input isIOS:(BOOL)isIOS;
+- (NSString *)convertFormatForString:(NSString *)input isFromIOS:(BOOL)isFromIOS;
 
 @end

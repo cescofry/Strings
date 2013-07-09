@@ -30,7 +30,7 @@
  
  */
 
-- (NSString *)convertFormatForString:(NSString *)input isIOS:(BOOL)isIOS {
+- (NSString *)convertFormatForString:(NSString *)input isFromIOS:(BOOL)isFromIOS {
     static NSRegularExpression *formatIOSRegEx;
     static NSRegularExpression *formatAndroidRegEx;
     if (!formatIOSRegEx) {
@@ -42,15 +42,37 @@
     __block NSMutableString *mutValue = [NSMutableString stringWithString:input];
     
     NSArray *formatMatches;
-    if (isIOS) formatMatches = [formatIOSRegEx  matchesInString:input options:NSMatchingReportCompletion range:NSMakeRange(0, input.length)];
+    if (isFromIOS) formatMatches = [formatIOSRegEx  matchesInString:input options:NSMatchingReportCompletion range:NSMakeRange(0, input.length)];
     else formatMatches = [formatAndroidRegEx  matchesInString:input options:NSMatchingReportCompletion range:NSMakeRange(0, input.length)];
+    
     [formatMatches enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSTextCheckingResult *subMatch, NSUInteger idx, BOOL *stop) {
         int i = (int) idx + 1;
-        NSRange range = [subMatch rangeAtIndex:1];
-        NSString *replace = [input substringWithRange:range];
-        if ([replace isEqualToString:@"@"]) replace = @"$";
         
-        [mutValue  replaceCharactersInRange:range withString:[NSString stringWithFormat:@"%d%@", i, replace]];
+        NSRange origRange = [subMatch rangeAtIndex:1];
+        NSString *orig = [input substringWithRange:origRange];
+        
+        NSString *replace = nil;
+        
+        NSRange range;
+        if (isFromIOS) {
+            // add number
+            replace = [NSString stringWithFormat:@"%d$%@", i, orig];
+            // check for @
+            range = [replace rangeOfString:@"@"];
+            if (range.location != NSNotFound) replace = [replace stringByReplacingCharactersInRange:range withString:@"s"];
+        }
+        else {
+            // remove number
+            range = [orig rangeOfString:[NSString stringWithFormat:@"%d$", i]];
+            if (range.location != NSNotFound) replace = [orig stringByReplacingCharactersInRange:range withString:@""];
+            //replace = [orig substringWithRange:NSMakeRange(1, (orig.length - 1))]; // TODO: Fromatting numbers is wrong. Putting too early
+            // check for $
+            range = [replace rangeOfString:@"s"];
+            if (range.location != NSNotFound) replace = [replace stringByReplacingCharactersInRange:range withString:@"@"];
+        }
+        
+        if (replace) [mutValue replaceCharactersInRange:origRange withString:replace];
+
     }];
     
     return (NSString *)mutValue;
@@ -131,7 +153,13 @@
     NSMutableString *stringsString = [NSMutableString string];
     
     [translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
-        NSString *value = (line.type == ZFTranslationLineTypeFormattedString)? [self convertFormatForString:line.value isIOS:YES] : line.value;
+        
+        if (line.type == ZFTranslationLineTypeComment) {
+            [stringsString appendFormat:@"/** %@ */", line.value];
+            return;
+        }
+        
+        NSString *value = (line.type == ZFTranslationLineTypeFormattedString)? [self convertFormatForString:line.value isFromIOS:NO] : line.value;
         [stringsString appendFormat:@"\"%@\" = \"%@\";\n", line.key, value];
     }];
     
@@ -204,7 +232,7 @@
         else {
             NSXMLElement *element = [NSXMLElement elementWithName:@"string"];
             [element setAttributesAsDictionary:@{@"name" : line.key}];
-            NSString *value = (line.type == ZFTranslationLineTypeFormattedString)? [self convertFormatForString:line.value isIOS:NO] : line.value;
+            NSString *value = (line.type == ZFTranslationLineTypeFormattedString)? [self convertFormatForString:line.value isFromIOS:YES] : line.value;
             [element setStringValue:value];
             
             [elements addObject:element];

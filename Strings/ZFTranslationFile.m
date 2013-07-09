@@ -152,6 +152,7 @@
     [self.translations addObjectsFromArray:file.translations];
     
     ZFLangFile *lastLang = [file.translations lastObject];
+    
     [self checkUpNameForLang:lastLang];
     
     if (lastLang) {
@@ -239,13 +240,58 @@
     [[NSFileManager defaultManager] createDirectoryAtURL:[langFile.url URLByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&error];
 }
 
+
+/*!
+ @abstract
+ Perform the actual conversion from translations to files
+ 
+ @param fromLang from which the translations are taken
+ 
+ @param toLang to take the url of the file to write
+ 
+ @param checkDirty set to YES to check if the toLang has keys to be converted to the fromLang
+ 
+ @param error reference to the error
+ 
+ @return BOOL if the process succeded or not
+ 
+ @discussion The function writes to the toLAng file URL and if the checkDirty is set to YES will also the the difference in keys between fromLang and toLang in order to also get the fromLang up to date
+ 
+ */
+
+
+- (BOOL)writeFromLang:(ZFLangFile *)fromLang toLang:(ZFLangFile *)toLang checkDirty:(BOOL)checkDirty error:(NSError **)error{
+    
+    ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
+    
+    NSString *textOutput = (fromLang.type == ZFLangTypeIOS)? [converter xmlStringFromTranslations:fromLang.translations] : [converter stringsStringFromTranslations:fromLang.translations];
+
+    BOOL succeded = [textOutput writeToURL:toLang.url atomically:YES encoding:NSUTF8StringEncoding error:error];
+    
+    if (!checkDirty) return succeded;
+    
+    
+    __block BOOL isDirty = NO;
+    [toLang.allKeys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
+        isDirty = (![fromLang.allKeys containsObject:key]);
+        *stop = isDirty;
+    }];
+    if (isDirty) {
+        succeded = [self writeFromLang:toLang toLang:fromLang checkDirty:NO error:error];
+    }
+    
+    
+    
+    
+    return succeded;
+}
+
 /*!
  @abstract
  Takes all the translations and write the files accordingly to the driven option
  
  @return BOOL if the process succeded or not
- 
- @discussion At the moment the process is only generating the non-driven file. However this is wrong. Because the list of transaltion is merged between iOS and Android, and the driven file would not receive the new keys.
+
  
  */
 
@@ -253,7 +299,7 @@
     
     if (self.conversionDriver == ZFTranslationFileConversionDriverSkip) return NO;
     
-    ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
+    
 
     NSMutableDictionary *couplingLanguages = [NSMutableDictionary dictionary];
     [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
@@ -276,16 +322,15 @@
             objAndorid = [[ZFLangFile alloc] init];
             [self convertURLForLanguage:objAndorid fromLangFile:objIOS];
         }
+    
 
         NSError *error = nil;
         
         if (self.conversionDriver == ZFTranslationFileConversionDriverIOS) {
-            NSString *textOutput = [converter xmlStringFromTranslations:objIOS.translations];
-            [textOutput writeToURL:objAndorid.url atomically:YES encoding:NSUTF8StringEncoding error:&error];
+            succeded = [self writeFromLang:objIOS toLang:objAndorid checkDirty:YES error:&error];
         }
         else {
-            NSString *textOutput = [converter stringsStringFromTranslations:objAndorid.translations];
-            [textOutput writeToURL:objIOS.url atomically:YES encoding:NSUTF8StringEncoding error:&error];
+            succeded = [self writeFromLang:objAndorid toLang:objIOS checkDirty:YES error:&error];
         }
         
         if (error) {
