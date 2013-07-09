@@ -24,7 +24,7 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    NSRect rect = self.titleLbl.frame;
+    NSRect rect = self.detailLbl.frame;
     rect.size.width -= BTN_W;
     NSRect btnRect = NSMakeRect(rect.size.width, rect.origin.y, BTN_W, self.bounds.size.height);
 

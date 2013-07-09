@@ -10,18 +10,42 @@
 
 #import "ZFFileViewCell.h"
 
+@interface ZFFileViewCell ()
+
+@property (nonatomic, strong) NSImageView *iOSIcon;
+@property (nonatomic, strong) NSImageView *androidIcon;
+
+@end
+
 @implementation ZFFileViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    NSRect frame = self.bounds;
+    CGRect labelFrame;
+    CGRect iconFrame;
+    CGRect frame = self.bounds;
     frame.size.height = ceil(frame.size.height /2);
-    self.titleLbl = [[NSTextField alloc] initWithFrame:frame];
+    
+    CGRectDivide(frame, &iconFrame, &labelFrame, 30, CGRectMinXEdge);
+
+    self.detailLbl = [[NSTextField alloc] initWithFrame:labelFrame];
+    [self.detailLbl setBordered:NO];
+    [self addSubview:self.detailLbl];
+
+    self.androidIcon = [[NSImageView alloc] initWithFrame:iconFrame];
+    [self.androidIcon setImage:[NSImage imageNamed:@"android_icon"]];
+    [self addSubview:self.androidIcon];
+    
+    labelFrame.origin.y += labelFrame.size.height;
+    self.titleLbl = [[NSTextField alloc] initWithFrame:labelFrame];
+    [self.titleLbl setBordered:NO];
     [self addSubview:self.titleLbl];
     
-    frame.origin.y += frame.size.height;
-    self.detailLbl = [[NSTextField alloc] initWithFrame:frame];
-    [self addSubview:self.detailLbl];
+    iconFrame.origin.y += iconFrame.size.height;
+    self.iOSIcon = [[NSImageView alloc] initWithFrame:iconFrame];
+    [self.iOSIcon setImage:[NSImage imageNamed:@"iOS_icon"]];
+    [self addSubview:self.iOSIcon];
+
 }
 
 
@@ -29,11 +53,7 @@
     _langFile = langFile;
     if (_langFile.iOSName.length > 0) [self.titleLbl setStringValue:_langFile.iOSName];
     if (_langFile.androidName.length > 0) [self.detailLbl setStringValue:_langFile.androidName];
-}
-
-- (void)drawRect:(NSRect)dirtyRect
-{
-    // Drawing code here.
+    [self setNeedsDisplay:YES];
 }
 
 @end
