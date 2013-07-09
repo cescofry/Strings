@@ -36,7 +36,7 @@ typedef enum {
 - (BOOL)mergeWithFile:(ZFTranslationFile *)file;
 - (void)finalizeMerge;
 
-- (BOOL)writeAllTranslations;
+- (BOOL)writeAllTranslationsError:(NSError **)error;
 
 - (NSArray *)translationsByType:(ZFLangType)type andLanguageIdentifier:(NSString *)identifier;
 

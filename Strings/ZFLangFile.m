@@ -39,10 +39,11 @@
         NSString *lang = [[ZFUtils sharedUtils] langFromURL:url isIOS:&isIOS];
         if (!lang) return nil;
         
-        _url = url;
+        self.url = url;
         _fileName = [url lastPathComponent];
         _type = (isIOS)? ZFLangTypeIOS : ZFLangTypeAndorid;
         _language = lang;
+        _isDirty = NO;
         
         ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
         NSArray *translations = (isIOS)? [converter translationsForStringsAtURL:url] : [converter translationsForXMLAtURL:url];
@@ -51,6 +52,22 @@
     }
     return self;
 
+}
+
+- (id)initWithCouplingLanguage:(ZFLangFile *)langfile {
+    self = [self init];
+    if (self) {
+        _type = (langfile.type == ZFLangTypeIOS)? ZFLangTypeAndorid : ZFLangTypeIOS;
+        _language = langfile.language;
+        _translations = [langfile.translations copy];
+        _isDirty = YES;
+    }
+    return self;
+}
+
+- (void)setUrl:(NSURL *)url {
+    _url = url;
+    _fileName = [_url lastPathComponent];
 }
 
 #pragma  mark - keys
@@ -79,5 +96,23 @@
     if (index == NSNotFound) return nil;
     return [self.translations objectAtIndex:index];
 }
+
+
+
+- (void)addLine:(ZFTranslationLine *)line {
+    ZFTranslationLine *aline = [self lineForKey:line.key];
+    if (aline) return;
+    
+    [self.translations addObject:line];
+    _isDirty = YES;
+    
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"position" ascending:YES];
+    [self.translations sortUsingDescriptors:@[descriptor]];
+}
+
+- (NSString *)description {
+    return [[super description] stringByAppendingFormat:@" %@ %d %@ %ld keys", self.fileName, self.type, self.language, (unsigned long)[self.keysAndComments count]];
+}
+
 
 @end

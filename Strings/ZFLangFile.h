@@ -22,8 +22,12 @@ typedef enum {
 @property (nonatomic, strong, readonly) NSString *language;
 @property (nonatomic, strong, readonly) NSArray *allKeys;
 @property (nonatomic, strong, readonly) NSMutableArray *translations;
+@property (nonatomic, assign, readonly) BOOL isDirty;
 
 - (id)initWithURL:(NSURL *)url;
+- (id)initWithCouplingLanguage:(ZFLangFile *)langfile;
 - (ZFTranslationLine *)lineForKey:(NSString *)key;
+
+- (void)addLine:(ZFTranslationLine *)line;
 
 @end

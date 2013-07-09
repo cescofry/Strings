@@ -247,7 +247,7 @@
     [xml setCharacterEncoding:@"utf-8"];
 
     
-    return [xml XMLStringWithOptions:NSXMLNodePrettyPrint];
+    return [xml XMLStringWithOptions:NSXMLNodePrettyPrint|NSXMLCommentKind];
 }
 
 @end

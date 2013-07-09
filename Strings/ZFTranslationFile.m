@@ -149,10 +149,11 @@
 - (BOOL)mergeWithFile:(ZFTranslationFile *)file {
     if (![self isEqual:file]) return NO;
     
+    
     [self.translations addObjectsFromArray:file.translations];
     
-    ZFLangFile *lastLang = [file.translations lastObject];
     
+    ZFLangFile *lastLang = [file.translations lastObject];
     [self checkUpNameForLang:lastLang];
     
     if (lastLang) {
@@ -187,6 +188,24 @@
         else androidLangCount++;
         
     }];
+    
+    [allKeys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
+        __block ZFTranslationLine *line;
+        [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *lang, NSUInteger idx, BOOL *stop) {
+            line = [lang lineForKey:key];
+            *stop = (line != nil && [lang.language isEqualToString:FAV_LANG]);
+        }];
+        
+        if (!line) {
+            NSLog(@"No avlid line found for %@", key);
+            return;
+        }
+        
+        [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *lang, NSUInteger idx, BOOL *stop) {
+            [lang addLine:line];
+        }];
+    }];
+    
     
     if (iOSLangCount == 0 || androidLangCount == 0) self.conversionDriver = ZFTranslationFileConversionDriverSkip;
     else self.conversionDriver = (iOSLangCount >= androidLangCount)? ZFTranslationFileConversionDriverIOS : ZFTranslationFileConversionDriverAndorid;
@@ -270,13 +289,7 @@
     
     if (!checkDirty) return succeded;
     
-    
-    __block BOOL isDirty = NO;
-    [toLang.allKeys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
-        isDirty = (![fromLang.allKeys containsObject:key]);
-        *stop = isDirty;
-    }];
-    if (isDirty) {
+    if (fromLang.isDirty) {
         succeded = [self writeFromLang:toLang toLang:fromLang checkDirty:NO error:error];
     }
     
@@ -295,13 +308,14 @@
  
  */
 
-- (BOOL)writeAllTranslations {
+- (BOOL)writeAllTranslationsError:(NSError **)error {
     
     if (self.conversionDriver == ZFTranslationFileConversionDriverSkip) return NO;
     
     
 
     NSMutableDictionary *couplingLanguages = [NSMutableDictionary dictionary];
+    
     [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
         NSMutableDictionary *files = [couplingLanguages objectForKey:obj.language];
         if (!files) files = [NSMutableDictionary dictionary];
@@ -315,29 +329,22 @@
         ZFLangFile *objAndorid = [files objectForKey:[NSNumber numberWithInt:ZFLangTypeAndorid]];
         
         if (!objIOS && objAndorid) {
-            objIOS = [[ZFLangFile alloc] init];
+            objIOS = [[ZFLangFile alloc] initWithCouplingLanguage:objAndorid];
             [self convertURLForLanguage:objIOS fromLangFile:objAndorid];
         }
         if (!objAndorid && objIOS) {
-            objAndorid = [[ZFLangFile alloc] init];
+            objAndorid = [[ZFLangFile alloc] initWithCouplingLanguage:objIOS];
             [self convertURLForLanguage:objAndorid fromLangFile:objIOS];
         }
-    
 
-        NSError *error = nil;
         
         if (self.conversionDriver == ZFTranslationFileConversionDriverIOS) {
-            succeded = [self writeFromLang:objIOS toLang:objAndorid checkDirty:YES error:&error];
+            succeded = [self writeFromLang:objIOS toLang:objAndorid checkDirty:YES error:error];
         }
         else {
-            succeded = [self writeFromLang:objAndorid toLang:objIOS checkDirty:YES error:&error];
+            succeded = [self writeFromLang:objAndorid toLang:objIOS checkDirty:YES error:error];
         }
-        
-        if (error) {
-            succeded = NO;
-            NSLog(@"Error: %@", error.debugDescription);
-        }
-        
+                
     }];
     
     return succeded;
@@ -357,7 +364,7 @@
  
  @return NSArray of translations
  
- @discussion The tye argument is compulsory amd setting it to 0 will trigger iOS results. To be ammended in the future.
+ @discussion The type argument is compulsory amd setting it to 0 will trigger iOS results. To be ammended in the future.
  
  */
 

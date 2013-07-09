@@ -22,12 +22,13 @@
 - (IBAction)exportAction:(id)sender {
     
     __block BOOL succeded = YES;
+    __block NSError *error;
     [self.scanner.files enumerateObjectsUsingBlock:^(ZFTranslationFile *translationFile, NSUInteger idx, BOOL *stop) {
-        BOOL done = [translationFile writeAllTranslations];
+        BOOL done = [translationFile writeAllTranslationsError:&error];
         if (succeded && !done) succeded = NO;
     }];
     
-    NSString *message = (succeded)? @"Export succeded" : @"Export Failed";
+    NSString *message = (!error)? @"Export succeded" : error.debugDescription;
     NSAlert *alert = [NSAlert alertWithMessageText:@"Export" defaultButton:@"Close" alternateButton:nil otherButton:nil informativeTextWithFormat:message];
     [alert runModal];
     
