@@ -54,6 +54,18 @@
 
 }
 
+/*!
+ @abstract
+ Generate Lang file as opposite of the given one
+ 
+ @param langFile the langfile to opposite copy
+ 
+ @return instance of the lang file
+ 
+ @discussion Used before converting a file from one ty to the other, as a reference of an existing file needs to exists
+ 
+ */
+
 - (id)initWithCouplingLanguage:(ZFLangFile *)langfile {
     self = [self init];
     if (self) {
