@@ -36,6 +36,10 @@
 		134E992F1779E91300D7D54B /* Test.txt in Resources */ = {isa = PBXBuildFile; fileRef = 134E992D1779E91300D7D54B /* Test.txt */; };
 		134E99301779E91300D7D54B /* Test.strings in Resources */ = {isa = PBXBuildFile; fileRef = 134E992E1779E91300D7D54B /* Test.strings */; };
 		134E99321779E91C00D7D54B /* Test.strings.xml in Resources */ = {isa = PBXBuildFile; fileRef = 134E99311779E91C00D7D54B /* Test.strings.xml */; };
+		137120D6178C5CF800A4FB47 /* android_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 137120D2178C5CF800A4FB47 /* android_icon.png */; };
+		137120D7178C5CF800A4FB47 /* android_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 137120D3178C5CF800A4FB47 /* android_icon@2x.png */; };
+		137120D8178C5CF800A4FB47 /* iOS_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 137120D4178C5CF800A4FB47 /* iOS_icon.png */; };
+		137120D9178C5CF800A4FB47 /* iOS_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 137120D5178C5CF800A4FB47 /* iOS_icon@2x.png */; };
 		1371BBC1177B23A5008EB467 /* ZFFilesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBC0177B23A5008EB467 /* ZFFilesController.m */; };
 		1371BBC6177B2410008EB467 /* ZFFileViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBC5177B2410008EB467 /* ZFFileViewCell.m */; };
 		1371BBC9177B29D2008EB467 /* ZFFileDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBC8177B29D2008EB467 /* ZFFileDetailController.m */; };
@@ -112,6 +116,10 @@
 		134E992D1779E91300D7D54B /* Test.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Test.txt; path = Tests/Test.txt; sourceTree = SOURCE_ROOT; };
 		134E992E1779E91300D7D54B /* Test.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Test.strings; path = Tests/Test.strings; sourceTree = SOURCE_ROOT; };
 		134E99311779E91C00D7D54B /* Test.strings.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Test.strings.xml; path = Tests/Test.strings.xml; sourceTree = SOURCE_ROOT; };
+		137120D2178C5CF800A4FB47 /* android_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = android_icon.png; sourceTree = "<group>"; };
+		137120D3178C5CF800A4FB47 /* android_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "android_icon@2x.png"; sourceTree = "<group>"; };
+		137120D4178C5CF800A4FB47 /* iOS_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iOS_icon.png; sourceTree = "<group>"; };
+		137120D5178C5CF800A4FB47 /* iOS_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iOS_icon@2x.png"; sourceTree = "<group>"; };
 		1371BBBF177B23A5008EB467 /* ZFFilesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZFFilesController.h; path = Controllers/ZFFilesController.h; sourceTree = "<group>"; };
 		1371BBC0177B23A5008EB467 /* ZFFilesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFFilesController.m; path = Controllers/ZFFilesController.m; sourceTree = "<group>"; };
 		1371BBC4177B2410008EB467 /* ZFFileViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZFFileViewCell.h; path = Views/ZFFileViewCell.h; sourceTree = "<group>"; };
@@ -167,6 +175,10 @@
 		13230160177DEA48008EB3D5 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				137120D2178C5CF800A4FB47 /* android_icon.png */,
+				137120D3178C5CF800A4FB47 /* android_icon@2x.png */,
+				137120D4178C5CF800A4FB47 /* iOS_icon.png */,
+				137120D5178C5CF800A4FB47 /* iOS_icon@2x.png */,
 				13230161177DEA48008EB3D5 /* android_to_ios.png */,
 				13230162177DEA48008EB3D5 /* android_to_ios@2x.png */,
 				13230163177DEA48008EB3D5 /* ios_to_android.png */,
@@ -435,6 +447,10 @@
 				1323016A177DEA48008EB3D5 /* ios_to_android@2x.png in Resources */,
 				1323016B177DEA48008EB3D5 /* skip.png in Resources */,
 				1323016C177DEA48008EB3D5 /* skip@2x.png in Resources */,
+				137120D6178C5CF800A4FB47 /* android_icon.png in Resources */,
+				137120D7178C5CF800A4FB47 /* android_icon@2x.png in Resources */,
+				137120D8178C5CF800A4FB47 /* iOS_icon.png in Resources */,
+				137120D9178C5CF800A4FB47 /* iOS_icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
