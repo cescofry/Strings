@@ -94,7 +94,6 @@
     
     if (!stringsURL) return nil;
     
-    NSMutableArray *translation = [NSMutableArray array];
     
     NSStringEncoding encoding;
     NSError *error;
@@ -107,34 +106,36 @@
     
     NSArray *matches = [regEx matchesInString:stringsString options:NSMatchingReportCompletion range:NSMakeRange(0, stringsString.length)];
     NSArray *comments = [commentRegEx matchesInString:stringsString options:NSMatchingReportCompletion range:NSMakeRange(0, stringsString.length)];
-    
-    matches = [[matches arrayByAddingObjectsFromArray:comments] sortedArrayUsingComparator:^NSComparisonResult(NSTextCheckingResult *obj1, NSTextCheckingResult *obj2) {
-        return (obj1.range.location < obj2.range.location)? NSOrderedAscending : NSOrderedDescending;
-    }];
-    
+    NSMutableArray *translations = [NSMutableArray array];
     
     [matches enumerateObjectsUsingBlock:^(NSTextCheckingResult *match, NSUInteger idx, BOOL *stop) {
         ZFTranslationLine *line = [ZFTranslationLine line];
-        if ([match numberOfRanges] > 2) {
-            NSString *key = [stringsString substringWithRange:[match rangeAtIndex:1]];
-            NSString *value = [stringsString substringWithRange:[match rangeAtIndex:2]];
-            
-            [line setKey:key];
-            [line setValue:value];
-            [line setPosition:idx];            
-        }
-        else {
-            NSString *value = [stringsString substringWithRange:[match range]];
-            [line setKey:[NSString stringWithFormat:@"*_comment_%ld", idx]];
-            [line setValue:value];
-            [line setPosition:idx];
-            [line setType:ZFTranslationLineTypeComment];
-        }
         
-        [translation addObject:line];
+        NSString *key = [stringsString substringWithRange:[match rangeAtIndex:1]];
+        NSString *value = [stringsString substringWithRange:[match rangeAtIndex:2]];
+        
+        [line setKey:key];
+        [line setValue:value];
+        [line setPosition:idx];
+        [line setRange:[match rangeAtIndex:0]];
+        
+        [translations addObject:line];
     }];
     
-    return (NSArray *)translation;
+    [comments enumerateObjectsUsingBlock:^(NSTextCheckingResult *match, NSUInteger idx, BOOL *stop) {
+        ZFTranslationLine *line = [ZFTranslationLine line];
+
+        NSString *value = [stringsString substringWithRange:[match rangeAtIndex:1]];
+        [line setKey:[NSString stringWithFormat:@"*_comment_%ld", idx]];
+        [line setValue:value];
+        [line setPosition:idx];
+        [line setType:ZFTranslationLineTypeComment];
+        [line setRange:[match rangeAtIndex:0]];
+    
+        [translations addObject:line];
+    }];
+    
+    return (NSArray *)translations;
     
 }
 
@@ -155,7 +156,7 @@
     [translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
         
         if (line.type == ZFTranslationLineTypeComment) {
-            [stringsString appendFormat:@"/** %@ */", line.value];
+            [stringsString appendFormat:@"/** %@ */\n", line.value];
             return;
         }
         

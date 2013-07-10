@@ -197,7 +197,7 @@
         }];
         
         if (!line) {
-            NSLog(@"No avlid line found for %@", key);
+            NSLog(@"No valid line found for %@", key);
             return;
         }
         

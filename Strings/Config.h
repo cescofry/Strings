@@ -12,7 +12,7 @@
 #pragma mark - formats
 #pragma mark iOS
 
-#define ZF_IOS_COMMENT_REGEX            @"/%*(.|[\r\n])*?%*/"
+#define ZF_IOS_COMMENT_REGEX            @"/\\*((.|[\r\n])*?)\\*/"
 #define ZF_IOS_REGEX                    @"\"([a-zA-Z0-9._]*)\"[ ]*=[ ]*\"(.+?)\"[ ]*;"
 #define ZF_FORMAT_IOS_REGEX             @"%(.?\\d?[@a-z])"
 #define ZF_LANG_DIR_IOS_REGEX           @"/([a-z]{2}).lproj/"

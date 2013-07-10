@@ -21,6 +21,7 @@ typedef enum {
 @property (nonatomic, strong) NSString *value;
 @property (nonatomic, assign) ZFTranslationLineType type;
 @property (nonatomic, assign) NSUInteger position;
+@property (nonatomic, assign) NSRange range;
 
 +(ZFTranslationLine *)line;
 
