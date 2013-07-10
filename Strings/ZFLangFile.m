@@ -49,6 +49,7 @@
         NSArray *translations = (isIOS)? [converter translationsForStringsAtURL:url] : [converter translationsForXMLAtURL:url];
         
         _translations = [NSMutableArray arrayWithArray:translations];
+        [self sortTranslations];
     }
     return self;
 
@@ -84,22 +85,14 @@
 
 #pragma  mark - keys
 
-- (void)extractKeys {
-    _keysAndComments = [self.translations valueForKey:@"key"];
-    if (!_keysAndComments) _keysAndComments = [NSArray array];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"NOT (self BEGINSWITH %@)", @"*"];
-    _allKeys = [self.keysAndComments filteredArrayUsingPredicate:predicate];
-    if (!_allKeys) _allKeys = [NSArray array];
-}
 
 - (NSArray *)keysAndComments {
-    if (!_keysAndComments) [self extractKeys];
+    if (!_keysAndComments) [self sortTranslations];
     return _keysAndComments;
 }
 
 - (NSArray *)allKeys {
-    if (!_allKeys) [self extractKeys];
+    if (!_allKeys) [self sortTranslations];
     return _allKeys;
 }
 
@@ -112,18 +105,35 @@
 
 
 - (void)addLine:(ZFTranslationLine *)line {
+    
     ZFTranslationLine *aline = [self lineForKey:line.key];
     if (aline) return;
     
     [self.translations addObject:line];
     _isDirty = YES;
     
-    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"position" ascending:YES];
-    [self.translations sortUsingDescriptors:@[descriptor]];
+    [self sortTranslations];
+}
+
+- (void)sortTranslations {
+    if (!self.translations || self.translations.count == 0) return;
+    
+    [self.translations sortUsingComparator:^NSComparisonResult(ZFTranslationLine *obj1, ZFTranslationLine *obj2) {
+        if (obj1.range.location == obj2.range.location) return NSOrderedSame;
+        else return (obj1.range.location < obj2.range.location)? NSOrderedAscending : NSOrderedDescending;
+    }];
+    
+    _keysAndComments = [self.translations valueForKey:@"key"];
+    if (!_keysAndComments) _keysAndComments = [NSArray array];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type != %d", ZFTranslationLineTypeComment];
+    _allKeys = [[self.translations filteredArrayUsingPredicate:predicate] valueForKey:@"key"];
+    if (!_allKeys) _allKeys = [NSArray array];
+    
 }
 
 - (NSString *)description {
-    return [[super description] stringByAppendingFormat:@" %@ %d %@ %ld keys", self.fileName, self.type, self.language, (unsigned long)[self.keysAndComments count]];
+    return [[super description] stringByAppendingFormat:@" %@ %d %@ %ld keys", self.fileName, self.type, self.language, (unsigned long)[self.allKeys count]];
 }
 
 

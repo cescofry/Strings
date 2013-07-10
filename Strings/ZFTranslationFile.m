@@ -210,7 +210,10 @@
     if (iOSLangCount == 0 || androidLangCount == 0) self.conversionDriver = ZFTranslationFileConversionDriverSkip;
     else self.conversionDriver = (iOSLangCount >= androidLangCount)? ZFTranslationFileConversionDriverIOS : ZFTranslationFileConversionDriverAndorid;
     
-    _allKeys = [allKeys sortedArrayUsingSelector:@selector(compare:)];
+    _allKeys = [allKeys sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+        return [obj1 compare:obj2];
+    }];
+    
     _allLanguages = [allLanguages sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
         if ([obj1 isEqualToString:FAV_LANG]) return NSOrderedAscending;
         else if ([obj2 isEqualToString:FAV_LANG]) return NSOrderedDescending;

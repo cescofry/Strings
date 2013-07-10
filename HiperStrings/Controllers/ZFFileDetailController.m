@@ -28,7 +28,6 @@
     self.columns = [[NSArray arrayWithObject:KEY_KEY] arrayByAddingObjectsFromArray:[_langFile allLanguages]];
     self.keys = (self.columns.count > 1)? [self.langFile allKeys] : [NSArray array];
     
-    
     NSMutableArray *addCol = [self.columns mutableCopy];
     NSArray *columns = [self.tableView.tableColumns copy];
     [columns enumerateObjectsUsingBlock:^(NSTableColumn *column, NSUInteger idx, BOOL *stop) {
@@ -64,11 +63,12 @@
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    if ([tableColumn.identifier isEqualToString:KEY_KEY]) return [self.keys objectAtIndex:row];
+    NSString *key = [self.keys objectAtIndex:row];
+    if ([tableColumn.identifier isEqualToString:KEY_KEY]) return key;
     else {
         NSArray *translation = [self.langFile translationsByType:(self.segmentedControl.selectedSegment == 0)? ZFLangTypeIOS : ZFLangTypeAndorid andLanguageIdentifier:tableColumn.identifier];
         ZFLangFile *lang = [translation lastObject];
-        return [[lang lineForKey:[self.keys objectAtIndex:row]] value];
+        return [[lang lineForKey:key] value];
     }
     
     //return [[self.rows objectForKey:tableColumn.identifier] objectForKey:[self.keys objectAtIndex:row]];
