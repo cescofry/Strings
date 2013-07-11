@@ -31,4 +31,19 @@
     return [[super description] stringByAppendingFormat:@"%@: %@", self.key, self.value];
 }
 
+#pragma mark NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    
+    ZFTranslationLine *line = [ZFTranslationLine line];
+    line.key = self.key;
+    line.value = self.value;
+    line.type = self.type;
+    line.position = self.position;
+    line.range = self.range;
+    line.comments = [self.comments copy];
+    return line;
+}
+
+
 @end

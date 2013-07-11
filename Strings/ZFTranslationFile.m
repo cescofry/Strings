@@ -29,7 +29,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        self.translations = [NSMutableArray array];
+        self.languages = [NSMutableArray array];
         self.conversionDriver = ZFTranslationFileConversionDriverSkip;
     }
     return self;
@@ -52,7 +52,7 @@
         _hashKeys = [self allKeys];
         if (!_hashKeys || _hashKeys.count < KEY_COMAPARISON) {
             
-            [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
+            [self.languages enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
                 _hashKeys = [obj.translations valueForKey:@"key"];
                 *stop = (_hashKeys.count >= KEY_COMAPARISON);
             }];
@@ -125,11 +125,11 @@
     ZFLangFile *lang = [[ZFLangFile alloc] initWithURL:url];
     if (!lang) return NO;
     
-    [self.translations addObject:lang];
+    [self.languages addObject:lang];
     [self checkUpNameForLang:lang];
     
     self.allKeys = nil;
-    self.allLanguages = nil;
+    self.allLanguageIdentifiers = nil;
     
     return YES;
 }
@@ -150,15 +150,15 @@
     if (![self isEqual:file]) return NO;
     
     
-    [self.translations addObjectsFromArray:file.translations];
+    [self.languages addObjectsFromArray:file.languages];
     
     
-    ZFLangFile *lastLang = [file.translations lastObject];
+    ZFLangFile *lastLang = [file.languages lastObject];
     [self checkUpNameForLang:lastLang];
     
     if (lastLang) {
         self.allKeys = nil;
-        self.allLanguages = nil;
+        self.allLanguageIdentifiers = nil;
     }
     
     return (lastLang != nil);
@@ -173,15 +173,15 @@
  */
 
 - (void)fillGaps {
-    NSMutableArray *allKeys = [NSMutableArray array];
-    NSMutableArray *allLanguages = [NSMutableArray array];
+    NSMutableDictionary *uniqueLines = [NSMutableDictionary dictionary];
+    NSMutableArray *allIdentifiers = [NSMutableArray array];
     __block NSInteger iOSLangCount, androidLangCount = 0;
     
-    [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *lang, NSUInteger idx, BOOL *stop) {
-        if (![allLanguages containsObject:lang.language]) [allLanguages addObject:lang.language];
-        [[lang allKeys] enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
-            if ([allKeys containsObject:key]) return;
-            [allKeys addObject:key];
+    [self.languages enumerateObjectsUsingBlock:^(ZFLangFile *lang, NSUInteger idx, BOOL *stop) {
+        if (![allIdentifiers containsObject:lang.language]) [allIdentifiers addObject:lang.language];
+        [lang.translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
+            if ([uniqueLines objectForKey:line.key]) return;
+            [uniqueLines setObject:line forKey:line.key];
         }];
         
         if (lang.type == ZFLangTypeIOS) iOSLangCount++;
@@ -189,32 +189,27 @@
         
     }];
     
-    [allKeys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
-        __block ZFTranslationLine *line;
-        [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *lang, NSUInteger idx, BOOL *stop) {
-            line = [lang lineForKey:key];
-            *stop = (line != nil && [lang.language isEqualToString:FAV_LANG]);
-        }];
-        
-        if (!line) {
-            NSLog(@"No valid line found for %@", key);
-            return;
-        }
-        
-        [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *lang, NSUInteger idx, BOOL *stop) {
+    [uniqueLines enumerateKeysAndObjectsUsingBlock:^(NSString *key, ZFTranslationLine *checkLine, BOOL *stop) {
+        [self.languages enumerateObjectsUsingBlock:^(ZFLangFile *lang, NSUInteger idx, BOOL *stop) {
+            ZFTranslationLine *line = [lang lineForKey:key];
+            if (line) return;
+            
+            line = [checkLine copy];
+            line.type = ZFTranslationLineTypeUntranslated;
             [lang addLine:line];
         }];
+    
     }];
     
     
     if (iOSLangCount == 0 || androidLangCount == 0) self.conversionDriver = ZFTranslationFileConversionDriverSkip;
     else self.conversionDriver = (iOSLangCount >= androidLangCount)? ZFTranslationFileConversionDriverIOS : ZFTranslationFileConversionDriverAndorid;
     
-    _allKeys = [allKeys sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+    _allKeys = [uniqueLines.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
         return [obj1 compare:obj2];
     }];
     
-    _allLanguages = [allLanguages sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+    _allLanguageIdentifiers = [allIdentifiers sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
         if ([obj1 isEqualToString:FAV_LANG]) return NSOrderedAscending;
         else if ([obj2 isEqualToString:FAV_LANG]) return NSOrderedDescending;
         else return [obj1 compare:obj2];
@@ -226,9 +221,9 @@
     return _allKeys;
 }
 
-- (NSArray *)allLanguages {
-    if (!_allLanguages) [self fillGaps];
-    return _allLanguages;
+- (NSArray *)allLanguageIdentifiers {
+    if (!_allLanguageIdentifiers) [self fillGaps];
+    return _allLanguageIdentifiers;
 }
 
 
@@ -295,10 +290,7 @@
     if (fromLang.isDirty) {
         succeded = [self writeFromLang:toLang toLang:fromLang checkDirty:NO error:error];
     }
-    
-    
-    
-    
+
     return succeded;
 }
 
@@ -319,7 +311,7 @@
 
     NSMutableDictionary *couplingLanguages = [NSMutableDictionary dictionary];
     
-    [self.translations enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
+    [self.languages enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
         NSMutableDictionary *files = [couplingLanguages objectForKey:obj.language];
         if (!files) files = [NSMutableDictionary dictionary];
         [files setObject:obj forKey:[NSNumber numberWithInt:obj.type]];
@@ -331,11 +323,14 @@
         ZFLangFile *objIOS = [files objectForKey:[NSNumber numberWithInt:ZFLangTypeIOS]];
         ZFLangFile *objAndorid = [files objectForKey:[NSNumber numberWithInt:ZFLangTypeAndorid]];
         
-        if (!objIOS && objAndorid) {
+        if (!objIOS && !objAndorid) return;
+        
+        if (!objIOS) {
             objIOS = [[ZFLangFile alloc] initWithCouplingLanguage:objAndorid];
             [self convertURLForLanguage:objIOS fromLangFile:objAndorid];
         }
-        if (!objAndorid && objIOS) {
+
+        if (!objAndorid) {
             objAndorid = [[ZFLangFile alloc] initWithCouplingLanguage:objIOS];
             [self convertURLForLanguage:objAndorid fromLangFile:objIOS];
         }
@@ -373,7 +368,7 @@
 
 - (NSArray *)translationsByType:(ZFLangType)type andLanguageIdentifier:(NSString *)identifier {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %d && language = %@", type, identifier];
-    return [self.translations filteredArrayUsingPredicate:predicate];
+    return [self.languages filteredArrayUsingPredicate:predicate];
 }
 
 @end

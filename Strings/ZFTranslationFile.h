@@ -24,10 +24,10 @@ typedef enum {
 @property (nonatomic, strong) NSString *iOSName;
 @property (nonatomic, strong) NSString *androidName;
 
-@property (nonatomic, strong) NSMutableArray *translations;
+@property (nonatomic, strong) NSMutableArray *languages;
 
 @property (nonatomic, strong) NSArray *allKeys;
-@property (nonatomic, strong) NSArray *allLanguages;
+@property (nonatomic, strong) NSArray *allLanguageIdentifiers;
 
 @property (nonatomic, strong, readonly) NSURL *rootIOSURL;
 @property (nonatomic, strong, readonly) NSURL *rootAndroidURL;

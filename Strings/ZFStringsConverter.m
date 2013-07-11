@@ -105,9 +105,24 @@
     NSRegularExpression *commentRegEx = [NSRegularExpression regularExpressionWithPattern:ZF_IOS_COMMENT_REGEX options:0 error:&error];
     
     NSArray *matches = [regEx matchesInString:stringsString options:NSMatchingReportCompletion range:NSMakeRange(0, stringsString.length)];
-    NSArray *comments = [commentRegEx matchesInString:stringsString options:NSMatchingReportCompletion range:NSMakeRange(0, stringsString.length)];
-    NSMutableArray *translations = [NSMutableArray array];
+    NSArray *matchesComments = [commentRegEx matchesInString:stringsString options:NSMatchingReportCompletion range:NSMakeRange(0, stringsString.length)];
+    NSMutableArray *comments = [NSMutableArray array];
     
+    [matchesComments enumerateObjectsUsingBlock:^(NSTextCheckingResult *match, NSUInteger idx, BOOL *stop) {
+        ZFTranslationLine *line = [ZFTranslationLine line];
+        
+        NSString *value = [stringsString substringWithRange:[match rangeAtIndex:1]];
+        [line setKey:[NSString stringWithFormat:@"*_comment_%ld", idx]];
+        [line setValue:value];
+        [line setPosition:idx];
+        [line setType:ZFTranslationLineTypeComment];
+        [line setRange:[match rangeAtIndex:0]];
+        
+        [comments addObject:line];
+    }];
+    
+
+    NSMutableArray *translations = [NSMutableArray array];
     [matches enumerateObjectsUsingBlock:^(NSTextCheckingResult *match, NSUInteger idx, BOOL *stop) {
         ZFTranslationLine *line = [ZFTranslationLine line];
         
@@ -119,21 +134,17 @@
         [line setPosition:idx];
         [line setRange:[match rangeAtIndex:0]];
         
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(ZFTranslationLine *evaluatedObject, NSDictionary *bindings) {
+            return (evaluatedObject.range.location < line.range.location);
+        }];
+        
+        NSArray *lineComments = [comments filteredArrayUsingPredicate:predicate];
+        [line setComments:lineComments];
+        if (lineComments.count > 0) [comments removeObjectsInArray:lineComments];
+        
         [translations addObject:line];
     }];
     
-    [comments enumerateObjectsUsingBlock:^(NSTextCheckingResult *match, NSUInteger idx, BOOL *stop) {
-        ZFTranslationLine *line = [ZFTranslationLine line];
-
-        NSString *value = [stringsString substringWithRange:[match rangeAtIndex:1]];
-        [line setKey:[NSString stringWithFormat:@"*_comment_%ld", idx]];
-        [line setValue:value];
-        [line setPosition:idx];
-        [line setType:ZFTranslationLineTypeComment];
-        [line setRange:[match rangeAtIndex:0]];
-    
-        [translations addObject:line];
-    }];
     
     return (NSArray *)translations;
     
@@ -154,11 +165,9 @@
     NSMutableString *stringsString = [NSMutableString string];
     
     [translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
-        
-        if (line.type == ZFTranslationLineTypeComment) {
-            [stringsString appendFormat:@"/** %@ */\n", line.value];
-            return;
-        }
+        [line.comments enumerateObjectsUsingBlock:^(ZFTranslationLine *comment, NSUInteger idx, BOOL *stop) {
+            [stringsString appendFormat:@"/** %@ */\n", comment.value];
+        }];
         
         NSString *value = (line.type == ZFTranslationLineTypeFormattedString)? [self convertFormatForString:line.value isFromIOS:NO] : line.value;
         [stringsString appendFormat:@"\"%@\" = \"%@\";\n", line.key, value];

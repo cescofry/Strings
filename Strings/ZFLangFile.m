@@ -9,12 +9,6 @@
 #import "ZFLangFile.h"
 #import "ZFStringsConverter.h"
 
-@interface ZFLangFile ()
-
-@property (nonatomic, strong) NSArray *keysAndComments;
-
-@end
-
 @implementation ZFLangFile
 
 @synthesize allKeys = _allKeys;
@@ -72,7 +66,7 @@
     if (self) {
         _type = (langfile.type == ZFLangTypeIOS)? ZFLangTypeAndorid : ZFLangTypeIOS;
         _language = langfile.language;
-        _translations = [langfile.translations copy];
+        _translations = [langfile.translations mutableCopy];
         _isDirty = YES;
     }
     return self;
@@ -86,18 +80,13 @@
 #pragma  mark - keys
 
 
-- (NSArray *)keysAndComments {
-    if (!_keysAndComments) [self sortTranslations];
-    return _keysAndComments;
-}
-
 - (NSArray *)allKeys {
     if (!_allKeys) [self sortTranslations];
     return _allKeys;
 }
 
 - (ZFTranslationLine *)lineForKey:(NSString *)key {
-    NSUInteger index = [self.keysAndComments indexOfObject:key];
+    NSUInteger index = [self.allKeys indexOfObject:key];
     if (index == NSNotFound) return nil;
     return [self.translations objectAtIndex:index];
 }
@@ -123,11 +112,7 @@
         else return (obj1.range.location < obj2.range.location)? NSOrderedAscending : NSOrderedDescending;
     }];
     
-    _keysAndComments = [self.translations valueForKey:@"key"];
-    if (!_keysAndComments) _keysAndComments = [NSArray array];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type != %d", ZFTranslationLineTypeComment];
-    _allKeys = [[self.translations filteredArrayUsingPredicate:predicate] valueForKey:@"key"];
+    _allKeys = [self.translations valueForKey:@"key"];
     if (!_allKeys) _allKeys = [NSArray array];
     
 }

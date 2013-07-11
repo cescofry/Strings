@@ -25,7 +25,7 @@
 - (void)setLangFile:(ZFTranslationFile *)langFile {
     _langFile = langFile;
     
-    self.columns = [[NSArray arrayWithObject:KEY_KEY] arrayByAddingObjectsFromArray:[_langFile allLanguages]];
+    self.columns = [[NSArray arrayWithObject:KEY_KEY] arrayByAddingObjectsFromArray:[_langFile allLanguageIdentifiers]];
     self.keys = (self.columns.count > 1)? [self.langFile allKeys] : [NSArray array];
     
     NSMutableArray *addCol = [self.columns mutableCopy];
