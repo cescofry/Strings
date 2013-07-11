@@ -129,7 +129,7 @@
     [self checkUpNameForLang:lang];
     
     self.allKeys = nil;
-    self.allLanguageIdentifiers = nil;
+    self.allIdioms = nil;
     
     return YES;
 }
@@ -158,7 +158,7 @@
     
     if (lastLang) {
         self.allKeys = nil;
-        self.allLanguageIdentifiers = nil;
+        self.allIdioms = nil;
     }
     
     return (lastLang != nil);
@@ -178,7 +178,7 @@
     __block NSInteger iOSLangCount, androidLangCount = 0;
     
     [self.languages enumerateObjectsUsingBlock:^(ZFLangFile *lang, NSUInteger idx, BOOL *stop) {
-        if (![allIdentifiers containsObject:lang.language]) [allIdentifiers addObject:lang.language];
+        if (![allIdentifiers containsObject:lang.idiom]) [allIdentifiers addObject:lang.idiom];
         [lang.translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
             if ([uniqueLines objectForKey:line.key]) return;
             [uniqueLines setObject:line forKey:line.key];
@@ -209,7 +209,7 @@
         return [obj1 compare:obj2];
     }];
     
-    _allLanguageIdentifiers = [allIdentifiers sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+    _allIdioms = [allIdentifiers sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
         if ([obj1 isEqualToString:FAV_LANG]) return NSOrderedAscending;
         else if ([obj2 isEqualToString:FAV_LANG]) return NSOrderedDescending;
         else return [obj1 compare:obj2];
@@ -221,9 +221,9 @@
     return _allKeys;
 }
 
-- (NSArray *)allLanguageIdentifiers {
-    if (!_allLanguageIdentifiers) [self fillGaps];
-    return _allLanguageIdentifiers;
+- (NSArray *)allIdioms {
+    if (!_allIdioms) [self fillGaps];
+    return _allIdioms;
 }
 
 
@@ -243,12 +243,12 @@
     if (langFile.url) return;
     
     if (referenceLangFile.type == ZFLangTypeIOS) {
-        NSString *dir = [NSString stringWithFormat:ZF_LANG_DIR_ANDROID_, referenceLangFile.language];
+        NSString *dir = [NSString stringWithFormat:ZF_LANG_DIR_ANDROID_, referenceLangFile.idiom];
         NSString *name = [referenceLangFile.fileName stringByAppendingPathExtension:ZF_LANG_EXTENSION_ANDROID_];
         langFile.url = [[self.rootAndroidURL URLByAppendingPathComponent:dir] URLByAppendingPathComponent:name];
     }
     else {
-        NSString *dir = [NSString stringWithFormat:ZF_LANG_DIR_IOS_, referenceLangFile.language];
+        NSString *dir = [NSString stringWithFormat:ZF_LANG_DIR_IOS_, referenceLangFile.idiom];
         NSString *name = [referenceLangFile.fileName stringByAppendingPathExtension:ZF_LANG_EXTENSION_IOS_];
         langFile.url = [[self.rootIOSURL URLByAppendingPathComponent:dir] URLByAppendingPathComponent:name];
     }
@@ -312,10 +312,10 @@
     NSMutableDictionary *couplingLanguages = [NSMutableDictionary dictionary];
     
     [self.languages enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
-        NSMutableDictionary *files = [couplingLanguages objectForKey:obj.language];
+        NSMutableDictionary *files = [couplingLanguages objectForKey:obj.idiom];
         if (!files) files = [NSMutableDictionary dictionary];
         [files setObject:obj forKey:[NSNumber numberWithInt:obj.type]];
-        [couplingLanguages setObject:files forKey:obj.language];
+        [couplingLanguages setObject:files forKey:obj.idiom];
     }];
     
     __block BOOL succeded = YES;
@@ -367,7 +367,7 @@
  */
 
 - (NSArray *)translationsByType:(ZFLangType)type andLanguageIdentifier:(NSString *)identifier {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %d && language = %@", type, identifier];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %d && idiom = %@", type, identifier];
     return [self.languages filteredArrayUsingPredicate:predicate];
 }
 

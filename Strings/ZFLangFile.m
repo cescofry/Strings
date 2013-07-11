@@ -36,7 +36,7 @@
         self.url = url;
         _fileName = [url lastPathComponent];
         _type = (isIOS)? ZFLangTypeIOS : ZFLangTypeAndorid;
-        _language = lang;
+        _idiom = lang;
         _isDirty = NO;
         
         ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
@@ -65,7 +65,7 @@
     self = [self init];
     if (self) {
         _type = (langfile.type == ZFLangTypeIOS)? ZFLangTypeAndorid : ZFLangTypeIOS;
-        _language = langfile.language;
+        _idiom = langfile.idiom;
         _translations = [langfile.translations mutableCopy];
         _isDirty = YES;
     }
@@ -118,7 +118,7 @@
 }
 
 - (NSString *)description {
-    return [[super description] stringByAppendingFormat:@" %@ %d %@ %ld keys", self.fileName, self.type, self.language, (unsigned long)[self.allKeys count]];
+    return [[super description] stringByAppendingFormat:@" %@ %d %@ %ld keys", self.fileName, self.type, self.idiom, (unsigned long)[self.allKeys count]];
 }
 
 

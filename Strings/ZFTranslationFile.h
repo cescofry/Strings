@@ -27,7 +27,7 @@ typedef enum {
 @property (nonatomic, strong) NSMutableArray *languages;
 
 @property (nonatomic, strong) NSArray *allKeys;
-@property (nonatomic, strong) NSArray *allLanguageIdentifiers;
+@property (nonatomic, strong) NSArray *allIdioms;
 
 @property (nonatomic, strong, readonly) NSURL *rootIOSURL;
 @property (nonatomic, strong, readonly) NSURL *rootAndroidURL;

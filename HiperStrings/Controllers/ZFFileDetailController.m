@@ -25,7 +25,7 @@
 - (void)setLangFile:(ZFTranslationFile *)langFile {
     _langFile = langFile;
     
-    self.columns = [[NSArray arrayWithObject:KEY_KEY] arrayByAddingObjectsFromArray:[_langFile allLanguageIdentifiers]];
+    self.columns = [[NSArray arrayWithObject:KEY_KEY] arrayByAddingObjectsFromArray:[_langFile allIdioms]];
     self.keys = (self.columns.count > 1)? [self.langFile allKeys] : [NSArray array];
     
     NSMutableArray *addCol = [self.columns mutableCopy];
@@ -40,10 +40,10 @@
     }];
     [addCol enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
         NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:obj];
-        [column setHeaderCell:[[NSCell alloc] initTextCell:obj]];
+        [[column headerCell] setStringValue:obj];
+        [[column headerCell] setAlignment:NSLeftTextAlignment];
         [self.tableView addTableColumn:column];
     }];
-    
     
     [self didSwithSegmentedControl:self.segmentedControl];
     
@@ -51,8 +51,14 @@
 
 #pragma mark - Segmented Controller
 
+-(void)tableViewColumnDidResize:(NSNotification *)notification {
+
+//    NSTableColumn *column = [[notification userInfo] objectForKey:@"NSTableColumn"];
+
+}
+
 - (IBAction)didSwithSegmentedControl:(NSSegmentedControl *)sender {
-    self.rows = [self.langFile translationsByType:(self.segmentedControl.selectedSegment == 0)? ZFLangTypeIOS : ZFLangTypeAndorid andLanguageIdentifier:nil];
+    self.rows = [self.langFile translationsByType:(self.segmentedControl.selectedSegment == 0)? ZFLangTypeIOS : ZFLangTypeAndorid andLanguageIdentifier:nil];  
     [self.tableView reloadData];
 }
 
@@ -62,13 +68,14 @@
     return [self.keys count];
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {    
     NSString *key = [self.keys objectAtIndex:row];
     if ([tableColumn.identifier isEqualToString:KEY_KEY]) return key;
     else {
         NSArray *translation = [self.langFile translationsByType:(self.segmentedControl.selectedSegment == 0)? ZFLangTypeIOS : ZFLangTypeAndorid andLanguageIdentifier:tableColumn.identifier];
         ZFLangFile *lang = [translation lastObject];
-        return [[lang lineForKey:key] value];
+        ZFTranslationLine *line = [lang lineForKey:key];
+        return (line.type != ZFTranslationLineTypeUntranslated)? line.value : @"--";
     }
     
     //return [[self.rows objectForKey:tableColumn.identifier] objectForKey:[self.keys objectAtIndex:row]];
