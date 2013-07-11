@@ -78,6 +78,26 @@
     return (NSString *)mutValue;
 }
 
+- (NSString *)lineValueString:(ZFTranslationLine *)line isIOS:(BOOL)isIOS{
+    switch (line.type) {
+        case ZFTranslationLineTypeFormattedString:
+            return [self convertFormatForString:line.value isFromIOS:isIOS];
+            break;
+        case ZFTranslationLineTypeComment:
+            return [line.value stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" *"]];
+            break;
+        case ZFTranslationLineTypeUntranslated:
+        case ZFTranslationLineTypeUnknown:
+            return @"";
+            break;
+        case ZFTranslationLineTypeString:
+        default:
+            return line.value;
+            break;
+    }
+    return nil;
+}
+
 /*!
  @abstract
  Convert the .strings file at a given URL and converts it to a dictionary of transaltions
@@ -166,11 +186,10 @@
     
     [translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
         [line.comments enumerateObjectsUsingBlock:^(ZFTranslationLine *comment, NSUInteger idx, BOOL *stop) {
-            [stringsString appendFormat:@"/** %@ */\n", comment.value];
+            [stringsString appendFormat:@"/** %@ */\n", [self lineValueString:comment isIOS:NO]];
         }];
         
-        NSString *value = (line.type == ZFTranslationLineTypeFormattedString)? [self convertFormatForString:line.value isFromIOS:NO] : line.value;
-        [stringsString appendFormat:@"\"%@\" = \"%@\";\n", line.key, value];
+        [stringsString appendFormat:@"\"%@\" = \"%@\";\n", line.key, [self lineValueString:line isIOS:NO]];
     }];
     
     return (NSString *)stringsString;
@@ -231,26 +250,23 @@
 - (NSString *)xmlStringFromTranslations:(NSArray *)translations {
     
     NSMutableArray *elements = [NSMutableArray array];
+    NSXMLElement *root = [NSXMLElement elementWithName:@"resources" children:elements attributes:nil];
     [translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
 
-        if (line.type == ZFTranslationLineTypeComment) {
-            NSXMLElement *element = [[NSXMLElement alloc] initWithKind:NSXMLCommentKind];
-            [element setStringValue:line.value];
-            
-            [elements addObject:element];
-        }
-        else {
-            NSXMLElement *element = [NSXMLElement elementWithName:@"string"];
-            [element setAttributesAsDictionary:@{@"name" : line.key}];
-            NSString *value = (line.type == ZFTranslationLineTypeFormattedString)? [self convertFormatForString:line.value isFromIOS:YES] : line.value;
-            [element setStringValue:value];
-            
-            [elements addObject:element];
-        }
+        [line.comments enumerateObjectsUsingBlock:^(ZFTranslationLine *comment, NSUInteger idx, BOOL *stop) {
+            NSXMLNode *node = [NSXMLNode commentWithStringValue:[self lineValueString:comment isIOS:YES]];
+            [root addChild:node];
+        }];
+        
+        NSXMLElement *element = [NSXMLElement elementWithName:@"string"];
+        [element setAttributesAsDictionary:@{@"name" : line.key}];
+        [element setStringValue:[self lineValueString:line isIOS:YES]];
+        
+        
+        [root addChild:element];
         
     }];
     
-    NSXMLElement *root = [NSXMLElement elementWithName:@"resources" children:elements attributes:nil];
     NSXMLDocument *xml = [NSXMLDocument documentWithRootElement:root];
     [xml setDocumentContentKind:NSXMLDocumentXMLKind];
     [xml setVersion:@"1.0"];
