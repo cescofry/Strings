@@ -10,7 +10,8 @@
 
 #import "ZFFileDetailController.h"
 
-#define KEY_KEY     @"Keys"
+#define KEY_KEY             @"Keys"
+#define MIN_COLUMN_WIDTH    100
 
 @interface ZFFileDetailController ()
 
@@ -30,6 +31,7 @@
     
     NSMutableArray *addCol = [self.columns mutableCopy];
     NSArray *columns = [self.tableView.tableColumns copy];
+    float width = ceil(self.tableView.bounds.size.width / addCol.count);
     [columns enumerateObjectsUsingBlock:^(NSTableColumn *column, NSUInteger idx, BOOL *stop) {
         if ([self.columns containsObject:column.identifier]) {
             [addCol removeObject:column.identifier];
@@ -42,6 +44,8 @@
         NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:obj];
         [[column headerCell] setStringValue:obj];
         [[column headerCell] setAlignment:NSLeftTextAlignment];
+        [column setWidth:width];
+        [column setMinWidth:MIN_COLUMN_WIDTH];
         [self.tableView addTableColumn:column];
     }];
     
@@ -75,7 +79,8 @@
         NSArray *translation = [self.langFile translationsByType:(self.segmentedControl.selectedSegment == 0)? ZFLangTypeIOS : ZFLangTypeAndorid andLanguageIdentifier:tableColumn.identifier];
         ZFLangFile *lang = [translation lastObject];
         ZFTranslationLine *line = [lang lineForKey:key];
-        return (line.type != ZFTranslationLineTypeUntranslated)? line.value : @"--";
+        NSString *value = (line.type != ZFTranslationLineTypeUntranslated && line.value.length > 0)? line.value : @"--";
+        return value;
     }
     
     //return [[self.rows objectForKey:tableColumn.identifier] objectForKey:[self.keys objectAtIndex:row]];
