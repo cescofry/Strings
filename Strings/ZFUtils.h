@@ -14,7 +14,6 @@
 
 @interface ZFUtils : NSObject
 
-- (NSString *)langFromURL:(NSURL *)url isIOS:(BOOL *)isIOS;
 +(ZFUtils *)sharedUtils;
 
 @end

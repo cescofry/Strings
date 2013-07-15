@@ -17,11 +17,13 @@
 @property (nonatomic, strong) IBOutlet ZFFileDetailController *fileDetailController;
 @property (nonatomic, strong) IBOutlet NSTableView *filesTable;
 @property (nonatomic, strong) IBOutlet NSButton *exportBtn;
+@property (nonatomic, strong) IBOutlet NSMenuItem *languageMenu;
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSPanel *exportPanel;
 
 @property (nonatomic, strong) IBOutlet ZFExportFilesController *exportController;
 
 - (IBAction)exportAction:(id)sender;
+- (IBAction)importCSV:(id)sender;
 
 @end

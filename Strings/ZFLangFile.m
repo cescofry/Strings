@@ -8,10 +8,82 @@
 
 #import "ZFLangFile.h"
 #import "ZFStringsConverter.h"
+#import "Config.h"
+
+@interface ZFLangFile ()
+
+@property (nonatomic, strong) NSRegularExpression *iOSLangRegEx;
+@property (nonatomic, strong) NSRegularExpression *androidLangRegEx;
+@property (nonatomic, strong) NSRegularExpression *CSVLangRegEx;
+
+@end
 
 @implementation ZFLangFile
 
 @synthesize allKeys = _allKeys;
+
+
+
+#pragma mark Getters
+
+- (NSRegularExpression *)iOSLangRegEx {
+    if (!_iOSLangRegEx) {
+        NSError *error = nil;
+        _iOSLangRegEx = [[NSRegularExpression alloc] initWithPattern:ZF_LANG_DIR_IOS_REGEX options:0 error:&error];
+    }
+    return _iOSLangRegEx;
+}
+
+- (NSRegularExpression *)androidLangRegEx {
+    if (!_androidLangRegEx) {
+        NSError *error = nil;
+        _androidLangRegEx = [[NSRegularExpression alloc] initWithPattern:ZF_LANG_DIR_ANDROID_REGEX options:0 error:&error];
+    }
+    return _androidLangRegEx;
+}
+
+- (NSRegularExpression *)CSVLangRegEx {
+    if (!_CSVLangRegEx) {
+        NSError *error = nil;
+        _CSVLangRegEx = [[NSRegularExpression alloc] initWithPattern:ZF_LANG_CSV_REGEX options:0 error:&error];
+    }
+    return _CSVLangRegEx;
+}
+
+#pragma mark - Lang utils
+
+/*!
+ @abstract
+ Checks the URL path for the language identifier and recognise if it's and iOS or Andorid path
+ 
+ @param url, the url to be checked
+ @param type, reference to the ZFLangType that will be found
+ @return NSString with the language identifier. Ex: en, it, de, fr, es ...
+ 
+ */
+
+
+- (NSString *)langFromURL:(NSURL *)url ofType:(ZFLangType *)type {
+    *type = ZFLangTypeIOS;
+    NSArray *matches = [self.iOSLangRegEx matchesInString:url.absoluteString options:NSMatchingReportCompletion range:NSMakeRange(0, url.absoluteString.length)];
+    
+    if (!matches || matches.count == 0) {
+        matches = [self.androidLangRegEx matchesInString:url.absoluteString options:NSMatchingReportCompletion range:NSMakeRange(0, url.absoluteString.length)];
+        *type = ZFLangTypeAndorid;
+    }
+    if (!matches || matches.count == 0) {
+        matches = [self.CSVLangRegEx matchesInString:url.absoluteString options:NSMatchingReportCompletion range:NSMakeRange(0, url.absoluteString.length)];
+        *type = ZFLangTypeCSV;
+    }
+    
+    if (!matches || matches.count == 0) return nil;
+    
+    NSRange langMatchRange = [[matches objectAtIndex:0] rangeAtIndex:1];
+    NSString *lang = [url.absoluteString substringWithRange:langMatchRange];
+    
+    return lang;
+}
+
 
 
 /*!
@@ -29,21 +101,35 @@
 - (id)initWithURL:(NSURL *)url {
     self = [self init];
     if (self) {
-        BOOL isIOS;
-        NSString *lang = [[ZFUtils sharedUtils] langFromURL:url isIOS:&isIOS];
+        ZFLangType type;
+        NSString *lang = [self langFromURL:url ofType:&type];
         if (!lang) return nil;
         
         self.url = url;
         _fileName = [url lastPathComponent];
-        _type = (isIOS)? ZFLangTypeIOS : ZFLangTypeAndorid;
+        _type = type;
         _idiom = lang;
         _isDirty = NO;
         
         ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
-        NSArray *translations = (isIOS)? [converter translationsForStringsAtURL:url] : [converter translationsForXMLAtURL:url];
+        NSArray *translations;
+        switch (_type) {
+            case ZFLangTypeIOS:
+                translations = [converter translationsForStringsAtURL:url];
+                break;
+            case ZFLangTypeAndorid:
+                translations = [converter translationsForXMLAtURL:url];
+                break;
+            case ZFLangTypeCSV:
+                translations = [converter translationsFromCSVAtURL:url];
+                break;
+            default:
+                break;
+        }
         
         _translations = [NSMutableArray arrayWithArray:translations];
         [self sortTranslations];
+        
     }
     return self;
 
@@ -75,6 +161,20 @@
 - (void)setUrl:(NSURL *)url {
     _url = url;
     _fileName = [_url lastPathComponent];
+}
+
+#pragma mark isEqual
+
+- (BOOL)isEqual:(id)object {
+    if (![object isKindOfClass:[self class]]) return [super isEqual:object];
+    
+    __block int count = 0;
+    [self.allKeys enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+        if ([[(ZFLangFile *)object allKeys] containsObject:obj]) count++;
+        *stop = (count >= KEY_COMAPARISON);
+    }];
+    
+    return (count >= MIN(KEY_COMAPARISON, self.allKeys.count));
 }
 
 #pragma  mark - keys

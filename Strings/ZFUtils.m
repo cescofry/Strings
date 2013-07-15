@@ -13,60 +13,11 @@
 
 @interface ZFUtils ()
 
-@property (nonatomic, strong) NSRegularExpression *iOSLangRegEx;
-@property (nonatomic, strong) NSRegularExpression *androidLangRegEx;
-
 @end
 
 @implementation ZFUtils
 
-#pragma mark Getters
 
-- (NSRegularExpression *)iOSLangRegEx {
-    if (!_iOSLangRegEx) {
-        NSError *error = nil;
-        _iOSLangRegEx = [[NSRegularExpression alloc] initWithPattern:ZF_LANG_DIR_IOS_REGEX options:0 error:&error];
-    }
-    return _iOSLangRegEx;
-}
-
-- (NSRegularExpression *)androidLangRegEx {
-    if (!_androidLangRegEx) {
-        NSError *error = nil;
-        _androidLangRegEx = [[NSRegularExpression alloc] initWithPattern:ZF_LANG_DIR_ANDROID_REGEX options:0 error:&error];
-    }
-    return _androidLangRegEx;
-}
-
-#pragma mark - Lang utils
-
-/*!
- @abstract
- Checks the URL path for the language identifier and recognise if it's and iOS or Andorid path
- 
- @param url, the url to be checked
- @param iuIOS, reference to the boolean that will be changed accordingly
- @return NSSTring with the language identifier. Ex: en, it, de, fr, es ...
- 
- */
-
-
-- (NSString *)langFromURL:(NSURL *)url isIOS:(BOOL *)isIOS {
-    NSArray *matches = [self.iOSLangRegEx matchesInString:url.absoluteString options:NSMatchingReportCompletion range:NSMakeRange(0, url.absoluteString.length)];
-    BOOL _isIOS = (matches && matches.count > 0);
-    if (!_isIOS) {
-        matches = [self.androidLangRegEx matchesInString:url.absoluteString options:NSMatchingReportCompletion range:NSMakeRange(0, url.absoluteString.length)];
-    }
-    
-    if (!matches || matches.count == 0) return nil;
-    
-    if (isIOS) *isIOS = _isIOS;
-    
-    NSRange langMatchRange = [[matches objectAtIndex:0] rangeAtIndex:1];
-    NSString *lang = [url.absoluteString substringWithRange:langMatchRange];
-    
-    return lang;
-}
 
 #pragma mark - singleton
 

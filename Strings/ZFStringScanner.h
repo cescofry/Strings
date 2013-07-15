@@ -13,7 +13,10 @@
 @interface ZFStringScanner : NSObject
 
 @property (nonatomic, strong, readonly) NSMutableArray *files;
+@property (nonatomic, strong, readonly) NSMutableArray *idioms;
+@property (nonatomic, strong) NSString *defaultIdiom;
 
 - (void)startScanAtURL:(NSURL *)URL;
+- (void)importCSVAtURL:(NSURL *)URL;
 
 @end

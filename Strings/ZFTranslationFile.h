@@ -37,6 +37,7 @@ typedef enum {
 - (void)finalizeMerge;
 
 - (BOOL)writeAllTranslationsError:(NSError **)error;
+- (BOOL)writeAllCSVToURL:(NSURL *)url missingOnly:(BOOL)missingOnly error:(NSError **)error;
 
 - (NSArray *)translationsByType:(ZFLangType)type andLanguageIdentifier:(NSString *)identifier;
 

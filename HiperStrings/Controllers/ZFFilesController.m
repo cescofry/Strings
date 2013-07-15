@@ -43,6 +43,7 @@
         self.scanner = [[ZFStringScanner alloc] init];
         [self.scanner startScanAtURL:self.sourceURL];
         [self.filesTable reloadData];
+        [self updateLanguages];
         /*
         [scanner.files enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
             NSLog(@"file\n %@[%@]\n %@[%@]", obj.iOSName, [obj.iOStranslations.allKeys componentsJoinedByString:@"|"], obj.androidName, [obj.androidTranslations.allKeys componentsJoinedByString:@"|"]);
@@ -59,6 +60,21 @@
                                     modalDelegate:self
                                    didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
                                       contextInfo:nil];
+}
+
+- (IBAction)importCSV:(id)sender {
+    NSOpenPanel* openDlg = [NSOpenPanel openPanel];
+    [openDlg setCanChooseFiles:YES];
+    [openDlg setAllowsMultipleSelection:NO];
+    [openDlg setCanChooseDirectories:NO];
+    
+    
+    void (^completitionBlock)(NSInteger) = ^(NSInteger result) {
+        [self.scanner importCSVAtURL:openDlg.URL];
+    };
+    
+    if (!self.window) [openDlg beginWithCompletionHandler:completitionBlock];
+    else [openDlg beginSheetModalForWindow:self.window completionHandler:completitionBlock];
 }
 
 - (void)setURLFromDialog:(void (^)(BOOL success)) completed {
@@ -80,6 +96,28 @@
     
     if (!self.window) [openDlg beginWithCompletionHandler:completitionBlock];
     else [openDlg beginSheetModalForWindow:self.window completionHandler:completitionBlock];
+}
+
+#pragma mark - Languages
+
+- (IBAction)setLanguage:(NSMenuItem *)menuItem {
+    [self.scanner setDefaultIdiom:menuItem.title];
+    [self updateLanguages];
+}
+
+- (void)updateLanguages {
+    [[self.languageMenu submenu] removeAllItems];
+    
+    [self.scanner.idioms enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+        NSMenuItem *newMenu = [[NSMenuItem alloc] init];
+        [newMenu setTitle:obj];
+        [newMenu setTarget:self];
+        [newMenu setAction:@selector(setLanguage:)];
+        [newMenu setState:[self.scanner.defaultIdiom isEqualToString:obj]? NSOnState : NSOffState];
+        [[self.languageMenu submenu] addItem:newMenu];
+    }];
+    
+    
 }
 
 #pragma mark - NSTableViewDelegate

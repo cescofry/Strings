@@ -9,14 +9,23 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ZFLangFile.h"
 
 @interface ZFStringsConverter : NSObject
 
-- (NSArray *)translationsForXMLAtURL:(NSURL *)XMLURL;
-- (NSString *)xmlStringFromTranslations:(NSArray *)translations;
 
-- (NSString *)stringsStringFromTranslations:(NSArray *)translations;
+// XML
+- (NSArray *)translationsForXMLAtURL:(NSURL *)XMLURL;
+- (NSString *)xmlStringFromLang:(ZFLangFile *)file;
+
+
+// Strings
+- (NSString *)stringsStringFromLang:(ZFLangFile *)file;
 - (NSArray *)translationsForStringsAtURL:(NSURL *)stringsURL;
+
+// CSV
+- (NSString *)csvFromFromLang:(ZFLangFile *)file defaultLang:(ZFLangFile *)defaultFile missingOnly:(BOOL)isMissingOnly;
+- (NSArray *)translationsFromCSVAtURL:(NSURL *)stringsURL;
 
 - (NSString *)convertFormatForString:(NSString *)input isFromIOS:(BOOL)isFromIOS;
 

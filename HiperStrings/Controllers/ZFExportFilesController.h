@@ -12,10 +12,13 @@
 @interface ZFExportFilesController : NSObject <NSTableViewDataSource, NSTableViewDelegate>
 
 @property (nonatomic, strong) IBOutlet NSTableView *tableView;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *csvPopUpBtn;
 @property (nonatomic, strong) ZFStringScanner *scanner;
 @property (nonatomic, strong) IBOutlet NSWindow *window;
 
 - (IBAction)exportAction:(id)sender;
 - (IBAction)cancelAction:(id)sender;
+
+- (IBAction)csvPopUpChanged:(id)sender;
 
 @end

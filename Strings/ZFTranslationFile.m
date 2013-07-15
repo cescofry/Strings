@@ -15,7 +15,6 @@
 #import "Config.h"
 
 #define FAV_LANG            @"en"
-#define KEY_COMAPARISON      5
 
 @interface ZFTranslationFile ()
 
@@ -31,6 +30,13 @@
     if (self) {
         self.languages = [NSMutableArray array];
         self.conversionDriver = ZFTranslationFileConversionDriverSkip;
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:ZF_DEFAULT_IDIOM_NOTIFICATION object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+            NSString *defaultLang = [[note userInfo] objectForKey:@"idiom"];
+            [self.languages enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
+                [obj setIsDefaultIdiom:([obj.idiom isEqualToString:defaultLang])];
+            }];
+        }];
     }
     return self;
 }
@@ -281,7 +287,7 @@
     
     ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
     
-    NSString *textOutput = (fromLang.type == ZFLangTypeIOS)? [converter xmlStringFromTranslations:fromLang.translations] : [converter stringsStringFromTranslations:fromLang.translations];
+    NSString *textOutput = (fromLang.type == ZFLangTypeIOS)? [converter xmlStringFromLang:fromLang] : [converter stringsStringFromLang:fromLang];
 
     BOOL succeded = [textOutput writeToURL:toLang.url atomically:YES encoding:NSUTF8StringEncoding error:error];
     
@@ -342,7 +348,63 @@
         else {
             succeded = [self writeFromLang:objAndorid toLang:objIOS checkDirty:YES error:error];
         }
-                
+        
+    }];
+    
+    return succeded;
+}
+
+/*!
+ @abstract
+ Takes all the translations and write the CSV file if is not set to Skip
+ 
+ @return BOOL if the process succeded or not
+ 
+ 
+ */
+
+- (BOOL)writeAllCSVToURL:(NSURL *)url missingOnly:(BOOL)missingOnly error:(NSError **)error {
+    if (self.conversionDriver == ZFTranslationFileConversionDriverSkip) return NO;
+    
+    
+
+    BOOL alreadyOnRightURL = [(NSString *)[[url pathComponents] lastObject] isEqualToString:ZF_EXPORT_DIR_CSV];
+    if (!alreadyOnRightURL) {
+        url = [url URLByAppendingPathComponent:ZF_EXPORT_DIR_CSV];
+        [[NSFileManager defaultManager] createDirectoryAtURL:url withIntermediateDirectories:YES attributes:nil error:error];
+    }
+    
+    
+    NSMutableDictionary *couplingLanguages = [NSMutableDictionary dictionary];
+    
+    __block ZFLangFile *defaultLang;
+    [self.languages enumerateObjectsUsingBlock:^(ZFLangFile *obj, NSUInteger idx, BOOL *stop) {
+        if (!defaultLang && obj.isDefaultIdiom) {
+            BOOL rightType = (obj.type == ZFLangTypeIOS && self.conversionDriver == ZFTranslationFileConversionDriverIOS);
+            if (!rightType) rightType =(obj.type == ZFLangTypeAndorid && self.conversionDriver == ZFTranslationFileConversionDriverAndorid);
+            
+            if (rightType) defaultLang = obj;            
+        }
+        
+        NSMutableDictionary *files = [couplingLanguages objectForKey:obj.idiom];
+        if (!files) files = [NSMutableDictionary dictionary];
+        [files setObject:obj forKey:[NSNumber numberWithInt:obj.type]];
+        [couplingLanguages setObject:files forKey:obj.idiom];
+    }];
+    
+    __block BOOL succeded = YES;
+    
+    
+    [couplingLanguages enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *files, BOOL *stop) {
+        ZFLangFile *obj = [files objectForKey:[NSNumber numberWithInt:(self.conversionDriver == ZFTranslationFileConversionDriverIOS)? ZFLangTypeIOS : ZFLangTypeAndorid]];
+        
+        NSString *fileName = [NSString stringWithFormat:ZF_LANG_FILE_CSV_, [obj.fileName stringByDeletingPathExtension], obj.idiom];
+        NSURL *writeURL = [url URLByAppendingPathComponent:fileName];
+        
+        ZFStringsConverter *converter = [[ZFStringsConverter alloc] init];
+        NSString *textOutput = [converter csvFromFromLang:obj defaultLang:defaultLang missingOnly:missingOnly];
+        succeded = [textOutput writeToURL:writeURL atomically:YES encoding:NSUTF8StringEncoding error:error];
+        
     }];
     
     return succeded;

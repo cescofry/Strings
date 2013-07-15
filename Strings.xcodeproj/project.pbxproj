@@ -53,6 +53,8 @@
 		137CBEA8177F581E003C472E /* ZFLangFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371BBDD177DBDD9008EB467 /* ZFLangFile.m */; };
 		137CBEA9177F5820003C472E /* ZFTranslationLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 137CBEA5177F2556003C472E /* ZFTranslationLine.m */; };
 		137CBEAA177F5828003C472E /* ZFStringScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 134E990B1779A80700D7D54B /* ZFStringScanner.m */; };
+		13A87BB91793FFB8006B4271 /* CHCSVParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A87BB81793FFB8006B4271 /* CHCSVParser.m */; };
+		13A87BBA179404E8006B4271 /* CHCSVParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A87BB81793FFB8006B4271 /* CHCSVParser.m */; };
 		13B17AED177AFB6000C0473E /* ZFTranslationFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */; };
 		13B17AEE177AFE2800C0473E /* ZFTranslationFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */; };
 		13B17AEF177AFE2800C0473E /* ZFTranslationFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */; };
@@ -137,10 +139,12 @@
 		1371BBDD177DBDD9008EB467 /* ZFLangFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFLangFile.m; sourceTree = "<group>"; };
 		137CBEA4177F2556003C472E /* ZFTranslationLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFTranslationLine.h; sourceTree = "<group>"; };
 		137CBEA5177F2556003C472E /* ZFTranslationLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFTranslationLine.m; sourceTree = "<group>"; };
+		13A87BB71793FFB8006B4271 /* CHCSVParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHCSVParser.h; sourceTree = "<group>"; };
+		13A87BB81793FFB8006B4271 /* CHCSVParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHCSVParser.m; sourceTree = "<group>"; };
 		13B17AEB177AFB6000C0473E /* ZFTranslationFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFTranslationFile.h; sourceTree = "<group>"; };
 		13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFTranslationFile.m; sourceTree = "<group>"; };
-		13B17AF0177B02F700C0473E /* ZFUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFUtils.h; sourceTree = "<group>"; };
-		13B17AF1177B02F700C0473E /* ZFUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFUtils.m; sourceTree = "<group>"; };
+		13B17AF0177B02F700C0473E /* ZFUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZFUtils.h; path = ../../../Strings/ZFUtils.h; sourceTree = "<group>"; };
+		13B17AF1177B02F700C0473E /* ZFUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFUtils.m; path = ../../../Strings/ZFUtils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,6 +229,7 @@
 		134E98D717799C4400D7D54B /* Strings */ = {
 			isa = PBXGroup;
 			children = (
+				13A87B961793FF76006B4271 /* Libs */,
 				134E98E317799C5000D7D54B /* Models */,
 				134E98DC17799C4400D7D54B /* Strings.1 */,
 				134E98DA17799C4400D7D54B /* Supporting Files */,
@@ -251,8 +256,6 @@
 				134E990B1779A80700D7D54B /* ZFStringScanner.m */,
 				13B17AEB177AFB6000C0473E /* ZFTranslationFile.h */,
 				13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */,
-				13B17AF0177B02F700C0473E /* ZFUtils.h */,
-				13B17AF1177B02F700C0473E /* ZFUtils.m */,
 				1371BBDC177DBDD9008EB467 /* ZFLangFile.h */,
 				1371BBDD177DBDD9008EB467 /* ZFLangFile.m */,
 				137CBEA4177F2556003C472E /* ZFTranslationLine.h */,
@@ -347,6 +350,26 @@
 				1371BBDA177D90DD008EB467 /* ZFFileExportCell.m */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		13A87B961793FF76006B4271 /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+				13A87BB61793FFB8006B4271 /* CHCSVParser */,
+			);
+			path = Libs;
+			sourceTree = SOURCE_ROOT;
+		};
+		13A87BB61793FFB8006B4271 /* CHCSVParser */ = {
+			isa = PBXGroup;
+			children = (
+				13A87BB71793FFB8006B4271 /* CHCSVParser.h */,
+				13A87BB81793FFB8006B4271 /* CHCSVParser.m */,
+				13B17AF0177B02F700C0473E /* ZFUtils.h */,
+				13B17AF1177B02F700C0473E /* ZFUtils.m */,
+			);
+			name = CHCSVParser;
+			path = CHCVS/CHCSVParser;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -495,6 +518,7 @@
 				13B17AF2177B02F700C0473E /* ZFUtils.m in Sources */,
 				1371BBDE177DBDD9008EB467 /* ZFLangFile.m in Sources */,
 				137CBEA6177F2556003C472E /* ZFTranslationLine.m in Sources */,
+				13A87BB91793FFB8006B4271 /* CHCSVParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,6 +540,7 @@
 				1371BBDB177D90DD008EB467 /* ZFFileExportCell.m in Sources */,
 				1323015F177DD7DD008EB3D5 /* ZFLangFile.m in Sources */,
 				137CBEA7177F2B7F003C472E /* ZFTranslationLine.m in Sources */,
+				13A87BBA179404E8006B4271 /* CHCSVParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

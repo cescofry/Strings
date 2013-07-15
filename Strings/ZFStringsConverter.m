@@ -11,6 +11,7 @@
 #import "ZFStringsConverter.h"
 #import "Config.h"
 #import "ZFTranslationLine.h"
+#import "CHCSVParser.h"
 
 @implementation ZFStringsConverter
 
@@ -180,7 +181,9 @@
  
  */
 
-- (NSString *)stringsStringFromTranslations:(NSArray *)translations {
+- (NSString *)stringsStringFromLang:(ZFLangFile *)file {
+    
+    NSArray *translations = file.translations;
     
     NSMutableString *stringsString = [NSMutableString string];
     
@@ -247,7 +250,9 @@
  
  */
 
-- (NSString *)xmlStringFromTranslations:(NSArray *)translations {
+- (NSString *)xmlStringFromLang:(ZFLangFile *)file {
+    
+    NSArray *translations = file.translations;
     
     NSMutableArray *elements = [NSMutableArray array];
     NSXMLElement *root = [NSXMLElement elementWithName:@"resources" children:elements attributes:nil];
@@ -274,6 +279,67 @@
 
     
     return [xml XMLStringWithOptions:NSXMLNodePrettyPrint|NSXMLCommentKind];
+}
+
+
+
+#pragma mark - CSV
+
+- (NSString *)csvFromFromLang:(ZFLangFile *)file defaultLang:(ZFLangFile *)defaultFile missingOnly:(BOOL)isMissingOnly {
+    NSMutableArray *normalizedTranslations = [NSMutableArray arrayWithArray:@[@"keys", defaultFile.idiom, file.idiom]];
+    [file.translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
+        
+        if (isMissingOnly && (line.value.length > 0)) return;
+        
+        ZFTranslationLine *defaultLine = [defaultFile lineForKey:line.key];
+        NSString *comments = [(NSArray *)[line.comments valueForKey:@"value"] componentsJoinedByString:@", "];
+        
+        NSString *defaultValue = (defaultLine.value)? defaultLine.value : @"--";
+        
+        NSArray *obj = (comments.length > 0)? @[line.key, defaultValue, line.value, comments] : @[line.key, defaultValue, line.value];
+        [normalizedTranslations addObject:obj];
+    }];
+    NSString *csvString = [normalizedTranslations CSVString];
+    return csvString;
+}
+
+- (NSArray *)translationsFromCSVAtURL:(NSURL *)stringsURL {
+    if (!stringsURL) return nil;
+
+    
+    NSArray *allComponents = [NSArray arrayWithContentsOfCSVFile:stringsURL.path options:CHCSVParserOptionsSanitizesFields];
+
+    NSMutableArray *translations = [NSMutableArray array];
+    __block NSRange range;
+    [allComponents enumerateObjectsUsingBlock:^(NSArray *components, NSUInteger idx, BOOL *stop) {
+        NSInteger count = [components count];
+        if (count == 0) return;
+        NSString *key = [components objectAtIndex:0];
+        if (key.length == 0) return;
+        
+        ZFTranslationLine *line = [ZFTranslationLine line];
+        [line setKey:key];
+        
+        NSString *value = @"";
+        if (count > 1) {
+            value = [components objectAtIndex:1];
+            [line setValue:value];
+        }
+        else {
+            [line setType:ZFTranslationLineTypeUntranslated];
+        }
+        
+        [line setPosition:idx];
+        
+        
+        range.location += range.length;
+        range.length = (key.length + value.length);
+        [line setRange:range];
+        
+        [translations addObject:line];
+    }];
+    
+    return (NSArray *)translations;
 }
 
 @end

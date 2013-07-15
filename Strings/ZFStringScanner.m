@@ -11,6 +11,7 @@
 #import "ZFStringScanner.h"
 #import "ZFStringsConverter.h"
 #import "ZFTranslationFile.h"
+#import "Config.h"
 
 @interface ZFStringScanner ()
 
@@ -23,6 +24,8 @@
 @implementation ZFStringScanner
 
 @synthesize files = _files;
+@synthesize idioms = _idioms;
+@synthesize defaultIdiom = _defaultIdiom;
 
 #pragma mark getters
 
@@ -34,6 +37,37 @@
 
 - (NSFileManager *)fileManager {
     return [NSFileManager defaultManager];
+}
+
+- (NSMutableArray *)idioms {
+    if (!_idioms) {
+        _idioms = [NSMutableArray array];
+        [self.files enumerateObjectsUsingBlock:^(ZFTranslationFile *file, NSUInteger idx, BOOL *stop) {
+            [file.allIdioms enumerateObjectsUsingBlock:^(NSString *idiom, NSUInteger idx, BOOL *stop) {
+                if ([_idioms containsObject:idiom]) return;
+                [_idioms addObject:idiom];
+            }];
+        }];
+    }
+    return _idioms;
+}
+
+- (NSString *)defaultIdiom {
+    if (!_defaultIdiom) {
+        NSInteger index = [self.idioms indexOfObject:@"en"];
+        if (index == NSNotFound) index = 0;
+        _defaultIdiom = [self.idioms objectAtIndex:index];
+    }
+    return _defaultIdiom;
+}
+
+- (void)setDefaultIdiom:(NSString *)defaultIdiom {
+    _defaultIdiom = defaultIdiom;
+    [self updateIdioms];
+}
+
+- (void)updateIdioms {
+    [[NSNotificationCenter defaultCenter] postNotificationName:ZF_DEFAULT_IDIOM_NOTIFICATION object:nil userInfo:@{@"idiom" : self.defaultIdiom}];
 }
 
 
@@ -119,6 +153,27 @@
     _files = result;
     result = nil;
     groups = nil;
+    [self updateIdioms];
+    
+}
+
+
+- (void)importCSVAtURL:(NSURL *)URL {
+    ZFLangFile *lang = [[ZFLangFile alloc] initWithURL:URL];
+ 
+    [self.files enumerateObjectsUsingBlock:^(ZFTranslationFile *file, NSUInteger idx, BOOL *stop) {
+        [file.languages enumerateObjectsUsingBlock:^(ZFLangFile *original, NSUInteger idx, BOOL *stop) {
+            if (![original isEqual:lang]) return;
+            
+            // Found, now substitute
+            [lang.translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
+                ZFTranslationLine *originalLine = [original lineForKey:line.key];
+                if (originalLine) [originalLine setValue:line.value];
+                else [original addLine:line];
+            }];
+        }];
+    }];
+    [self updateIdioms];
     
 }
 
