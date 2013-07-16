@@ -89,8 +89,8 @@
 		134E98D817799C4400D7D54B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		134E98DB17799C4400D7D54B /* Strings-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Strings-Prefix.pch"; sourceTree = "<group>"; };
 		134E98DC17799C4400D7D54B /* Strings.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Strings.1; sourceTree = "<group>"; };
-		134E98E717799DC900D7D54B /* ZFStringsConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFStringsConverter.m; sourceTree = "<group>"; };
-		134E98E817799DC900D7D54B /* ZFStringsConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFStringsConverter.h; sourceTree = "<group>"; };
+		134E98E717799DC900D7D54B /* ZFStringsConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFStringsConverter.m; path = ../Strings/ZFStringsConverter.m; sourceTree = "<group>"; };
+		134E98E817799DC900D7D54B /* ZFStringsConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZFStringsConverter.h; path = ../Strings/ZFStringsConverter.h; sourceTree = "<group>"; };
 		134E98EE1779A73900D7D54B /* HiperStrings.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HiperStrings.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		134E98EF1779A73900D7D54B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		134E98F21779A73900D7D54B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -250,8 +250,6 @@
 		134E98E317799C5000D7D54B /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				134E98E817799DC900D7D54B /* ZFStringsConverter.h */,
-				134E98E717799DC900D7D54B /* ZFStringsConverter.m */,
 				134E990A1779A80700D7D54B /* ZFStringScanner.h */,
 				134E990B1779A80700D7D54B /* ZFStringScanner.m */,
 				13B17AEB177AFB6000C0473E /* ZFTranslationFile.h */,
@@ -355,6 +353,8 @@
 		13A87B961793FF76006B4271 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				134E98E817799DC900D7D54B /* ZFStringsConverter.h */,
+				134E98E717799DC900D7D54B /* ZFStringsConverter.m */,
 				13A87BB61793FFB8006B4271 /* CHCSVParser */,
 			);
 			path = Libs;
