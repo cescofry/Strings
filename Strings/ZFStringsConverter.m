@@ -13,6 +13,8 @@
 #import "ZFTranslationLine.h"
 #import "CHCSVParser.h"
 
+#define EXPORT_KEY  @"key"
+
 @implementation ZFStringsConverter
 
 #pragma mark - Strings
@@ -286,7 +288,7 @@
 #pragma mark - CSV
 
 - (NSString *)csvFromFromLang:(ZFLangFile *)file defaultLang:(ZFLangFile *)defaultFile missingOnly:(BOOL)isMissingOnly {
-    NSMutableArray *normalizedTranslations = [NSMutableArray arrayWithArray:@[@"keys", defaultFile.idiom, file.idiom]];
+    NSMutableArray *normalizedTranslations = [NSMutableArray arrayWithArray:@[EXPORT_KEY, defaultFile.idiom, file.idiom]];
     [file.translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
         
         if (isMissingOnly && (line.value.length > 0)) return;
@@ -314,7 +316,7 @@
     [allComponents enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
         if ([[dict allKeys] count] == 0) return;
         
-        NSString *key = [dict objectForKey:@"keys"];
+        NSString *key = [dict objectForKey:EXPORT_KEY];
         if (key.length == 0) return;
         
         ZFTranslationLine *line = [ZFTranslationLine line];
