@@ -81,6 +81,18 @@
     return (NSString *)mutValue;
 }
 
+/*!
+ @abstract
+ Takes care of the type of line in order to generate human readable value
+ 
+ @param line the line from which the value is extracted
+
+ @param isIOS to drive the conversion
+ 
+ @return NSString the human readable value
+ 
+ */
+
 - (NSString *)lineValueString:(ZFTranslationLine *)line isIOS:(BOOL)isIOS{
     switch (line.type) {
         case ZFTranslationLineTypeFormattedString:
@@ -287,6 +299,20 @@
 
 #pragma mark - CSV
 
+/*!
+ @abstract
+ creates a csv string from the language, using the default language as hint for the keys to be translated
+ 
+ @param file the lang to be translated
+ 
+ @param defaultFile the lang of reference for translations hints
+ 
+ @param isMissingOnly to determine if all the keys or only untranslated need to be exported
+ 
+ @return NSSTring with CSV data
+ 
+ */
+
 - (NSString *)csvFromFromLang:(ZFLangFile *)file defaultLang:(ZFLangFile *)defaultFile missingOnly:(BOOL)isMissingOnly {
     NSMutableArray *normalizedTranslations = [NSMutableArray arrayWithArray:@[EXPORT_KEY, defaultFile.idiom, file.idiom]];
     [file.translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {
@@ -304,6 +330,20 @@
     NSString *csvString = [normalizedTranslations CSVString];
     return csvString;
 }
+
+/*!
+ @abstract
+ translations taken from a CS file
+ 
+ @param stringsURL the file containing the CSV
+ 
+ @param idiom the idiom to be exported
+ 
+ @return NSArray the transaltions
+ 
+ @discussion The CSV file could contain more than one translations column. Idiom help to export the right one
+ 
+ */
 
 - (NSArray *)translationsFromCSVAtURL:(NSURL *)stringsURL idiom:(NSString *)idiom {
     if (!stringsURL) return nil;

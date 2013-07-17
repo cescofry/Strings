@@ -157,6 +157,16 @@
     
 }
 
+/*!
+ @abstract
+ Imports new ZFLang files from a given CSV file
+ 
+ @param URL the url of the CSV file
+ 
+ @discussion At the moment this process works while exporting a single language from each file.
+ 
+ */
+
 
 - (void)importCSVAtURL:(NSURL *)URL {
     ZFLangFile *lang = [[ZFLangFile alloc] initWithURL:URL];

@@ -143,8 +143,8 @@
 		13A87BB81793FFB8006B4271 /* CHCSVParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHCSVParser.m; sourceTree = "<group>"; };
 		13B17AEB177AFB6000C0473E /* ZFTranslationFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFTranslationFile.h; sourceTree = "<group>"; };
 		13B17AEC177AFB6000C0473E /* ZFTranslationFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFTranslationFile.m; sourceTree = "<group>"; };
-		13B17AF0177B02F700C0473E /* ZFUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZFUtils.h; path = ../../../Strings/ZFUtils.h; sourceTree = "<group>"; };
-		13B17AF1177B02F700C0473E /* ZFUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFUtils.m; path = ../../../Strings/ZFUtils.m; sourceTree = "<group>"; };
+		13B17AF0177B02F700C0473E /* ZFUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZFUtils.h; path = ../Strings/ZFUtils.h; sourceTree = "<group>"; };
+		13B17AF1177B02F700C0473E /* ZFUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZFUtils.m; path = ../Strings/ZFUtils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -353,9 +353,11 @@
 		13A87B961793FF76006B4271 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				13A87BB61793FFB8006B4271 /* CHCSVParser */,
 				134E98E817799DC900D7D54B /* ZFStringsConverter.h */,
 				134E98E717799DC900D7D54B /* ZFStringsConverter.m */,
-				13A87BB61793FFB8006B4271 /* CHCSVParser */,
+				13B17AF0177B02F700C0473E /* ZFUtils.h */,
+				13B17AF1177B02F700C0473E /* ZFUtils.m */,
 			);
 			path = Libs;
 			sourceTree = SOURCE_ROOT;
@@ -365,8 +367,6 @@
 			children = (
 				13A87BB71793FFB8006B4271 /* CHCSVParser.h */,
 				13A87BB81793FFB8006B4271 /* CHCSVParser.m */,
-				13B17AF0177B02F700C0473E /* ZFUtils.h */,
-				13B17AF1177B02F700C0473E /* ZFUtils.m */,
 			);
 			name = CHCSVParser;
 			path = CHCVS/CHCSVParser;
