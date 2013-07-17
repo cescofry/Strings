@@ -303,37 +303,35 @@
     return csvString;
 }
 
-- (NSArray *)translationsFromCSVAtURL:(NSURL *)stringsURL {
+- (NSArray *)translationsFromCSVAtURL:(NSURL *)stringsURL idiom:(NSString *)idiom {
     if (!stringsURL) return nil;
 
     
-    NSArray *allComponents = [NSArray arrayWithContentsOfCSVFile:stringsURL.path options:CHCSVParserOptionsSanitizesFields];
+    NSArray *allComponents = [NSArray arrayWithContentsOfCSVFile:stringsURL.path options:CHCSVParserOptionsSanitizesFields|CHCSVParserOptionsFirstLineAsKeys];
 
     NSMutableArray *translations = [NSMutableArray array];
     __block NSRange range;
-    [allComponents enumerateObjectsUsingBlock:^(NSArray *components, NSUInteger idx, BOOL *stop) {
-        NSInteger count = [components count];
-        if (count == 0) return;
-        NSString *key = [components objectAtIndex:0];
+    [allComponents enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
+        if ([[dict allKeys] count] == 0) return;
+        
+        NSString *key = [dict objectForKey:@"keys"];
         if (key.length == 0) return;
         
         ZFTranslationLine *line = [ZFTranslationLine line];
         [line setKey:key];
         
-        NSString *value = @"";
-        if (count > 1) {
-            value = [components objectAtIndex:1];
+        NSString *value = [dict objectForKey:idiom];
+        if (value.length > 0) {
+            value = [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             [line setValue:value];
         }
-        else {
-            [line setType:ZFTranslationLineTypeUntranslated];
-        }
+        else [line setType:ZFTranslationLineTypeUntranslated];
         
         [line setPosition:idx];
         
-        
         range.location += range.length;
-        range.length = (key.length + value.length);
+        if (value) range.length = (key.length + value.length);
+        
         [line setRange:range];
         
         [translations addObject:line];

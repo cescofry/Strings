@@ -121,7 +121,7 @@
                 translations = [converter translationsForXMLAtURL:url];
                 break;
             case ZFLangTypeCSV:
-                translations = [converter translationsFromCSVAtURL:url];
+                translations = [converter translationsFromCSVAtURL:url idiom:lang];
                 break;
             default:
                 break;

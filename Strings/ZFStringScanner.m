@@ -164,6 +164,7 @@
     [self.files enumerateObjectsUsingBlock:^(ZFTranslationFile *file, NSUInteger idx, BOOL *stop) {
         [file.languages enumerateObjectsUsingBlock:^(ZFLangFile *original, NSUInteger idx, BOOL *stop) {
             if (![original isEqual:lang]) return;
+            if (![original.idiom isEqual:lang.idiom]) return;
             
             // Found, now substitute
             [lang.translations enumerateObjectsUsingBlock:^(ZFTranslationLine *line, NSUInteger idx, BOOL *stop) {

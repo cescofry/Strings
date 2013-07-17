@@ -25,7 +25,7 @@
 
 // CSV
 - (NSString *)csvFromFromLang:(ZFLangFile *)file defaultLang:(ZFLangFile *)defaultFile missingOnly:(BOOL)isMissingOnly;
-- (NSArray *)translationsFromCSVAtURL:(NSURL *)stringsURL;
+- (NSArray *)translationsFromCSVAtURL:(NSURL *)stringsURL idiom:(NSString *)idiom;
 
 - (NSString *)convertFormatForString:(NSString *)input isFromIOS:(BOOL)isFromIOS;
 
